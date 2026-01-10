@@ -13,6 +13,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/', [HomeController::class, 'dashboard'])->name('dashboard');
         Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+        // Admin - Tourist Management (using WebAuthController)
+Route::get('/tourists', [WebAuthController::class, 'touristIndex'])
+    ->name('tourists');
+
+Route::delete('/tourists/{id}', [WebAuthController::class, 'touristDelete'])
+    ->name('tourists.delete');
+
     });
 });
 
@@ -27,4 +35,6 @@ Route::post('/do-login', [WebAuthController::class, 'doLogin'])->name('web.do.lo
 Route::group(['middleware' => 'touristAuth'], function () {
     Route::get('/logout', [WebAuthController::class, 'logout'])->name('web.logout');
     Route::get('/contact-us', [WebHomeController::class, 'contact'])->name('contact');
+
+       Route::get('/profile', [WebAuthController::class, 'profile'])->name('web.profile');
 });

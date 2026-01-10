@@ -71,33 +71,47 @@ class WebAuthController extends Controller
     }
 
     public function doLogin(Request $request)
-    {
-        try {
-            $checkValidation = Validator::make($request->all(), [
-                'email' => 'required|email',
-                'password' => 'required',
-            ]);
+{
+    try {
+        $checkValidation = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-            if ($checkValidation->fails()) {
-                alert()->error('Error', 'Validation Failed!');
-                return redirect()->back()->withErrors($checkValidation)->withInput();
-            }
+        if ($checkValidation->fails()) {
+            alert()->error('Error', 'Validation Failed!');
+            return redirect()->back()->withErrors($checkValidation)->withInput();
+        }
 
-            $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
+        $remember = $request->has('remember');
 
-            if (Auth::guard('touristGuard')->attempt($credentials)) {
-                alert()->success('Success', 'Login Successful!');
-                return redirect()->route('home');
-            } else {
-                alert()->error('Error', 'Invalid Email or Password!');
-                return redirect()->back();
-            }
-        } catch (Exception $e) {
-            alert()->error('Error', 'Login Failed!');
+        if (Auth::guard('touristGuard')->attempt($credentials, $remember)) {
+            alert()->success('Success', 'Login Successful!');
+            return redirect()->route('home');
+        } else {
+            alert()->error('Error', 'Invalid Email or Password!');
             return redirect()->back();
         }
+    } catch (Exception $e) {
+        alert()->error('Error', 'Login Failed!');
+        return redirect()->back();
     }
+}
 
+// Frontend: show profile
+
+public function profile()
+{
+    try {
+        $tourist = Auth::guard('touristGuard')->user();
+        return view('frontend.pages.profile', compact('tourist'));
+    } catch (Exception $e) {
+        alert()->error('Error', 'Unable to load profile!');
+        return redirect()->back();
+    }
+}
+// Frontend: logout tourist
     public function logout()
     {
         try {
@@ -113,4 +127,32 @@ class WebAuthController extends Controller
 
         return redirect()->route('home');
     }
+
+
+
+    public function touristIndex()
+{
+    try {
+        $tourists = Tourist::latest()->get();
+        return view('backend.pages.tourists.index', compact('tourists'));
+    } catch (Exception $e) {
+        alert()->error('Error', 'Unable to load tourists!');
+        return redirect()->back();
+    }
+}
+
+// Backend: delete tourist
+public function touristDelete($id)
+{
+    try {
+        $tourist = Tourist::findOrFail($id);
+        $tourist->delete();
+
+        alert()->success('Success', 'Tourist deleted successfully!');
+        return redirect()->back();
+    } catch (Exception $e) {
+        alert()->error('Error', 'Delete failed!');
+        return redirect()->back();
+    }
+}
 }

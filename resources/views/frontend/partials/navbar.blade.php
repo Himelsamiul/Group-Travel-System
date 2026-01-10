@@ -29,7 +29,7 @@
 					<li><a href="{{route('web.login')}}">Login</a></li>
 					@endguest
 					@auth('touristGuard')
-					<li><a style="color: red;">{{ auth('touristGuard')->user()->name }}</a></li>
+					<li><a href="{{route('web.profile')}}" style="color: red;">{{ auth('touristGuard')->user()->name }}</a></li>
 					<li><a href="{{route('web.logout')}}">Logout</a></li>
 					@endauth
 				</ul>

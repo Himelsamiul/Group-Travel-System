@@ -44,9 +44,9 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="icons.html">
+							<a href="{{ route('tourists') }}">
 								<i class="la la-fonticons"></i>
-								<p>Icons</p>
+								<p>Clients</p>
 							</a>
 						</li>
 					</ul>
