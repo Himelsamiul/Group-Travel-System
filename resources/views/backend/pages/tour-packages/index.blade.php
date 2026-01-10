@@ -130,7 +130,12 @@
 
                             {{-- Action --}}
                             <td>
-                                <a href="{{ route('tour-packages.edit',$p->id) }}"
+
+                                <a href="{{ route('tour-packages.show',$p->id) }}"
+                                   class="btn btn-sm btn-secondary">
+                                   View
+                               </a>
+                                 <a href="{{ route('tour-packages.edit',$p->id) }}"
                                    class="btn btn-sm btn-info">
                                     Edit
                                 </a>

@@ -197,4 +197,14 @@ class TourPackageController extends Controller
         alert()->success('Success', 'Tour package deleted successfully!');
         return redirect()->back();
     }
+
+
+    public function show($id)
+{
+    $package = TourPackage::with(['place','hotel','transportation'])
+                ->findOrFail($id);
+
+    return view('backend.pages.tour-packages.show', compact('package'));
+}
+
 }
