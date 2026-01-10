@@ -12,5 +12,8 @@ protected $fillable = [
     'status',
     'note',
 ];
-
+   public function tourPackages()
+    {
+        return $this->hasMany(TourPackage::class);
+    }
 }

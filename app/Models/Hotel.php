@@ -12,4 +12,10 @@ class Hotel extends Model
         'note',
         'status',
     ];
+
+
+    public function tourPackages()
+    {
+        return $this->hasMany(TourPackage::class);
+    }
 }

@@ -20,7 +20,7 @@
 
             {{-- Tour Packages (future ready) --}}
             <li class="nav-item">
-                <a href="#">
+                <a href="{{ route('tour-packages.index') }}">
                     <i class="la la-suitcase"></i>
                     <p>Tour Packages</p>
                 </a>

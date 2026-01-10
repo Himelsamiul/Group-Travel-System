@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\PlaceController;
 use App\Http\Controllers\Backend\HotelController;
 use App\Http\Controllers\Backend\TransportationController;
+use App\Http\Controllers\Backend\TourPackageController;
 
 //admin
 Route::group(['prefix' => 'admin'], function () {
@@ -39,6 +40,13 @@ Route::post('/transportations', [TransportationController::class, 'store'])->nam
 Route::get('/transportations/{id}/edit', [TransportationController::class, 'edit'])->name('transportations.edit');
 Route::put('/transportations/{id}', [TransportationController::class, 'update'])->name('transportations.update');
 Route::delete('/transportations/{id}', [TransportationController::class, 'destroy'])->name('transportations.destroy');
+
+    Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
+    Route::get('/tour-packages/create', [TourPackageController::class, 'create'])->name('tour-packages.create');
+    Route::post('/tour-packages', [TourPackageController::class, 'store'])->name('tour-packages.store');
+    Route::get('/tour-packages/{id}/edit', [TourPackageController::class, 'edit'])->name('tour-packages.edit');
+    Route::put('/tour-packages/{id}', [TourPackageController::class, 'update'])->name('tour-packages.update');
+    Route::delete('/tour-packages/{id}', [TourPackageController::class, 'destroy'])->name('tour-packages.destroy');
 
     });
 });
