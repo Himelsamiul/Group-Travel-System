@@ -14,7 +14,7 @@ class PlaceController extends Controller
     public function index()
     {
         try {
-            // 🌍 Manual Country List (NO PACKAGE)
+          
             $countries = [
                 'Bangladesh',
                 'India',
@@ -64,16 +64,20 @@ class PlaceController extends Controller
         $request->validate([
             'country' => 'required',
             'name' => 'required',
+            'note' => 'nullable',
+            'status' => 'required|in:active,inactive'
         ]);
 
-        Place::create([
-            'country' => $request->country,
-            'name'    => $request->name,
-            'note'    => $request->note,
-        ]);
+$place = new Place();
+    $place->country = $request->country;
+    $place->name    = $request->name;
+    $place->note    = $request->note;
+    $place->status  = $request->status; // 🔥 THIS LINE WORKS
+    $place->save();
 
-        alert()->success('Success', 'Place created successfully!');
-        return redirect()->back();
+    alert()->success('Success', 'Place created successfully!');
+    return redirect()->back();;
+
     }
 
     // ===============================
@@ -106,18 +110,20 @@ class PlaceController extends Controller
         $request->validate([
             'country' => 'required',
             'name' => 'required',
+            'note' => 'nullable',
+            'status' => 'required|in:active,inactive'
         ]);
 
-        $place = Place::findOrFail($id);
-        $place->update([
-            'country' => $request->country,
-            'name'    => $request->name,
-            'note'    => $request->note,
-        ]);
+    $place = Place::findOrFail($id);
+    $place->country = $request->country;
+    $place->name    = $request->name;
+    $place->note    = $request->note;
+    $place->status  = $request->status; // 🔥 THIS LINE WORKS
+    $place->save();
 
-        alert()->success('Success', 'Place updated successfully!');
-        return redirect()->route('places.index');
-    }
+    alert()->success('Success', 'Place updated successfully!');
+    return redirect()->route('places.index');
+}
 
     // ===============================
     // Delete

@@ -16,6 +16,7 @@ return new class extends Migration
         $table->string('country'); // fixed value from code
         $table->string('name');
         $table->text('note')->nullable();
+        $table->enum('status', ['active', 'inactive'])->default('active');
         $table->timestamps();
         });
     }

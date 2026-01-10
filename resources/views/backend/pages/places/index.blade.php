@@ -49,6 +49,21 @@
                                    required>
                         </div>
 
+                        <!-- Status -->
+                        <div class="form-group mb-3">
+                            <label>Status</label>
+                            <select name="status" class="form-control">
+                                <option value="active"
+                                    {{ (isset($place) && $place->status == 'active') ? 'selected' : '' }}>
+                                    Active
+                                </option>
+                                <option value="inactive"
+                                    {{ (isset($place) && $place->status == 'inactive') ? 'selected' : '' }}>
+                                    Inactive
+                                </option>
+                            </select>
+                        </div>
+
                         <!-- Note -->
                         <div class="form-group mb-3">
                             <label>Note</label>
@@ -88,9 +103,10 @@
                     <table class="table table-bordered table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th width="50">SL</th>
+                                <th width="40">SL</th>
                                 <th>Country</th>
                                 <th>Place</th>
+                                <th>Status</th>
                                 <th>Note</th>
                                 <th>Date</th>
                                 <th width="140">Action</th>
@@ -102,6 +118,12 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $p->country }}</td>
                                     <td>{{ $p->name }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {{ $p->status == 'active' ? 'badge-success' : 'badge-secondary' }}">
+                                            {{ ucfirst($p->status) }}
+                                        </span>
+                                    </td>
                                     <td>{{ $p->note }}</td>
                                     <td>{{ $p->created_at->format('d M, Y') }}</td>
                                     <td>
@@ -110,23 +132,21 @@
                                             Edit
                                         </a>
 
-<form action="{{ route('places.destroy',$p->id) }}"
-      method="POST"
-      class="d-inline"
-      onsubmit="return confirm('Are you sure you want to delete this place?');">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-sm btn-danger">
-        Delete
-    </button>
-</form>
-
-
+                                        <form action="{{ route('places.destroy',$p->id) }}"
+                                              method="POST"
+                                              class="d-inline"
+                                              onsubmit="return confirm('Are you sure you want to delete this place?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">
+                                    <td colspan="7" class="text-center text-muted">
                                         No places found
                                     </td>
                                 </tr>
@@ -140,10 +160,3 @@
     </div>
 </div>
 @endsection
-
-
-{{-- ================= SWEETALERT DELETE CONFIRM ================= --}}
-
-
-
-

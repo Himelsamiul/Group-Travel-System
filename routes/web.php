@@ -6,6 +6,7 @@ use App\Http\Controllers\WebAuthController;
 use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\PlaceController;
+use App\Http\Controllers\Backend\HotelController;
 
 //admin
 Route::group(['prefix' => 'admin'], function () {
@@ -16,18 +17,20 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
         // Admin - Tourist Management (using WebAuthController)
-Route::get('/tourists', [WebAuthController::class, 'touristIndex'])
-    ->name('tourists');
-
-Route::delete('/tourists/{id}', [WebAuthController::class, 'touristDelete'])
-    ->name('tourists.delete');
-
+Route::get('/tourists', [WebAuthController::class, 'touristIndex'])->name('tourists');
+Route::delete('/tourists/{id}', [WebAuthController::class, 'touristDelete'])->name('tourists.delete');
     //place 
 Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
 Route::post('/places', [PlaceController::class, 'store'])->name('places.store');
 Route::get('/places/{id}/edit', [PlaceController::class, 'edit'])->name('places.edit');
 Route::put('/places/{id}', [PlaceController::class, 'update'])->name('places.update');
 Route::delete('/places/{id}', [PlaceController::class, 'destroy'])->name('places.destroy');
+// hotel
+Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
+Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
+Route::get('/hotels/{id}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
+Route::put('/hotels/{id}', [HotelController::class, 'update'])->name('hotels.update');
+Route::delete('/hotels/{id}', [HotelController::class, 'destroy'])->name('hotels.destroy');
 
     });
 });
