@@ -46,7 +46,8 @@ class PlaceController extends Controller
 
             sort($countries); // A–Z
 
-            $places = Place::latest()->get();
+            $places = Place::latest()->paginate(1); // 10`` per page
+
 
             return view('backend.pages.places.index', compact('places', 'countries'));
 
@@ -97,7 +98,8 @@ $place = new Place();
         sort($countries);
 
         $place  = Place::findOrFail($id);
-        $places = Place::latest()->get();
+        $places = Place::latest()->paginate(1); // 10 per page
+
 
         return view('backend.pages.places.index', compact('place','places','countries'));
     }

@@ -11,7 +11,7 @@ class HotelController extends Controller
     // Create + List
     public function index()
     {
-        $hotels = Hotel::latest()->get();
+        $hotels = Hotel::latest()->paginate(10); // 10 per page
         return view('backend.pages.hotels.index', compact('hotels'));
     }
 
@@ -34,7 +34,7 @@ class HotelController extends Controller
     public function edit($id)
     {
         $hotel  = Hotel::findOrFail($id);
-        $hotels = Hotel::latest()->get();
+        $hotels = Hotel::latest()->paginate(10); // 10 per page
 
         return view('backend.pages.hotels.index', compact('hotel','hotels'));
     }

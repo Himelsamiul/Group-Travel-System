@@ -71,18 +71,16 @@
                                       rows="3">{{ $hotel->note ?? '' }}</textarea>
                         </div>
 
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-primary w-100">
-                                {{ isset($hotel) ? 'Update Hotel' : 'Create Hotel' }}
-                            </button>
+                        <button class="btn btn-primary w-100">
+                            {{ isset($hotel) ? 'Update Hotel' : 'Create Hotel' }}
+                        </button>
 
-                            @if(isset($hotel))
-                                <a href="{{ route('hotels.index') }}"
-                                   class="btn btn-secondary w-100">
-                                    Cancel
-                                </a>
-                            @endif
-                        </div>
+                        @if(isset($hotel))
+                            <a href="{{ route('hotels.index') }}"
+                               class="btn btn-secondary w-100 mt-2">
+                                Cancel
+                            </a>
+                        @endif
 
                     </form>
                 </div>
@@ -100,26 +98,30 @@
                     <table class="table table-bordered table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>SL</th>
+                                <th width="40">SL</th>
                                 <th>Name</th>
                                 <th>Stars</th>
-                                <th>Status</th>
+                               
                                 <th>Note</th>
+                                <th>Date</th>
+                                 <th>Status</th>
                                 <th width="130">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($hotels as $key => $h)
                                 <tr>
-                                    <td>{{ $key+1 }}</td>
+                                    <td>{{ $hotels->firstItem() + $key }}</td>
                                     <td>{{ $h->name }}</td>
                                     <td>{{ $h->stars }} ★</td>
+                                    
+                                    <td>{{ $h->note }}</td>
+                                    <td>{{ $h->created_at->format('d M, Y') }}</td>
                                     <td>
-                                        <span class="badge {{ $h->status=='active'?'badge-success':'badge-secondary' }}">
+                                        <span class="badge {{ $h->status=='active' ? 'badge-success' : 'badge-secondary' }}">
                                             {{ ucfirst($h->status) }}
                                         </span>
                                     </td>
-                                    <td>{{ $h->note }}</td>
                                     <td>
                                         <a href="{{ route('hotels.edit',$h->id) }}"
                                            class="btn btn-sm btn-info">
@@ -148,6 +150,40 @@
                             @endforelse
                         </tbody>
                     </table>
+
+                    {{-- ================= CUSTOM PAGINATION ================= --}}
+                    @if ($hotels->lastPage() > 1)
+                        <nav class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="text-muted small">
+                                Showing {{ $hotels->firstItem() }} to {{ $hotels->lastItem() }}
+                                of {{ $hotels->total() }} results
+                            </div>
+
+                            <ul class="pagination mb-0">
+                                <li class="page-item {{ $hotels->onFirstPage() ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ $hotels->previousPageUrl() ?? '#' }}">
+                                        Previous
+                                    </a>
+                                </li>
+
+                                @for ($i = 1; $i <= $hotels->lastPage(); $i++)
+                                    <li class="page-item {{ $hotels->currentPage() == $i ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $hotels->url($i) }}">
+                                            {{ $i }}
+                                        </a>
+                                    </li>
+                                @endfor
+
+                                <li class="page-item {{ $hotels->hasMorePages() ? '' : 'disabled' }}">
+                                    <a class="page-link" href="{{ $hotels->nextPageUrl() ?? '#' }}">
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    @endif
+                    {{-- ================= END PAGINATION ================= --}}
+
                 </div>
             </div>
         </div>

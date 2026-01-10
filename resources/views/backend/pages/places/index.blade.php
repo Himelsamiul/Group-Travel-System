@@ -7,7 +7,7 @@
 
     <div class="row">
 
-        <!-- ================= CREATE / EDIT FORM ================= -->
+        {{-- ================= CREATE / EDIT FORM ================= --}}
         <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-header">
@@ -24,9 +24,8 @@
                             @method('PUT')
                         @endif
 
-                        <!-- Country -->
                         <div class="form-group mb-3">
-                            <label>Country</label>
+                            <label>Country <span class="text-danger">*</span></label>
                             <select name="country" class="form-control" required>
                                 <option value="">Select Country</option>
                                 @foreach($countries as $country)
@@ -38,61 +37,44 @@
                             </select>
                         </div>
 
-                        <!-- Place Name -->
                         <div class="form-group mb-3">
-                            <label>Place Name</label>
-                            <input type="text"
-                                   name="name"
-                                   class="form-control"
-                                   value="{{ $place->name ?? '' }}"
-                                   placeholder="Enter place name"
-                                   required>
+                            <label>Place Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control"
+                                   value="{{ $place->name ?? '' }}" required>
                         </div>
 
-                        <!-- Status -->
                         <div class="form-group mb-3">
-                            <label>Status</label>
-                            <select name="status" class="form-control">
-                                <option value="active"
-                                    {{ (isset($place) && $place->status == 'active') ? 'selected' : '' }}>
+                            <label>Status <span class="text-danger">*</span></label>
+                            <select name="status" class="form-control" required>
+                                <option value="active" {{ (isset($place) && $place->status=='active')?'selected':'' }}>
                                     Active
                                 </option>
-                                <option value="inactive"
-                                    {{ (isset($place) && $place->status == 'inactive') ? 'selected' : '' }}>
+                                <option value="inactive" {{ (isset($place) && $place->status=='inactive')?'selected':'' }}>
                                     Inactive
                                 </option>
                             </select>
                         </div>
 
-                        <!-- Note -->
                         <div class="form-group mb-3">
                             <label>Note</label>
-                            <textarea name="note"
-                                      class="form-control"
-                                      rows="3"
-                                      placeholder="Optional note">{{ $place->note ?? '' }}</textarea>
+                            <textarea name="note" class="form-control" rows="3">{{ $place->note ?? '' }}</textarea>
                         </div>
 
-                        <!-- Buttons -->
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-primary w-100">
-                                {{ isset($place) ? 'Update Place' : 'Create Place' }}
-                            </button>
+                        <button class="btn btn-primary w-100">
+                            {{ isset($place) ? 'Update Place' : 'Create Place' }}
+                        </button>
 
-                            @if(isset($place))
-                                <a href="{{ route('places.index') }}"
-                                   class="btn btn-secondary w-100">
-                                    Cancel
-                                </a>
-                            @endif
-                        </div>
-
+                        @if(isset($place))
+                            <a href="{{ route('places.index') }}" class="btn btn-secondary w-100 mt-2">
+                                Cancel
+                            </a>
+                        @endif
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- ================= PLACE LIST ================= -->
+        {{-- ================= PLACE LIST ================= --}}
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-header">
@@ -103,7 +85,7 @@
                     <table class="table table-bordered table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th width="40">SL</th>
+                                <th>SL</th>
                                 <th>Country</th>
                                 <th>Place</th>
                                 <th>Status</th>
@@ -115,30 +97,28 @@
                         <tbody>
                             @forelse($places as $key => $p)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $places->firstItem() + $key }}</td>
                                     <td>{{ $p->country }}</td>
                                     <td>{{ $p->name }}</td>
                                     <td>
-                                        <span class="badge 
-                                            {{ $p->status == 'active' ? 'badge-success' : 'badge-secondary' }}">
+                                        <span class="badge {{ $p->status=='active'?'badge-success':'badge-secondary' }}">
                                             {{ ucfirst($p->status) }}
                                         </span>
                                     </td>
                                     <td>{{ $p->note }}</td>
                                     <td>{{ $p->created_at->format('d M, Y') }}</td>
                                     <td>
-                                        <a href="{{ route('places.edit',$p->id) }}"
-                                           class="btn btn-sm btn-info">
+                                        <a href="{{ route('places.edit',$p->id) }}" class="btn btn-sm btn-info">
                                             Edit
                                         </a>
 
                                         <form action="{{ route('places.destroy',$p->id) }}"
                                               method="POST"
                                               class="d-inline"
-                                              onsubmit="return confirm('Are you sure you want to delete this place?');">
+                                              onsubmit="return confirm('Delete this place?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">
+                                            <button class="btn btn-sm btn-danger">
                                                 Delete
                                             </button>
                                         </form>
@@ -153,6 +133,45 @@
                             @endforelse
                         </tbody>
                     </table>
+
+                    {{-- ================= CUSTOM PAGINATION ================= --}}
+                    @if ($places->lastPage() > 1)
+                        <nav class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="text-muted small">
+                                Showing {{ $places->firstItem() }} to {{ $places->lastItem() }}
+                                of {{ $places->total() }} results
+                            </div>
+
+                            <ul class="pagination mb-0">
+                                {{-- Previous --}}
+                                <li class="page-item {{ $places->onFirstPage() ? 'disabled' : '' }}">
+                                    <a class="page-link"
+                                       href="{{ $places->previousPageUrl() ?? '#' }}">
+                                        Previous
+                                    </a>
+                                </li>
+
+                                {{-- Pages --}}
+                                @for ($i = 1; $i <= $places->lastPage(); $i++)
+                                    <li class="page-item {{ $places->currentPage() == $i ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $places->url($i) }}">
+                                            {{ $i }}
+                                        </a>
+                                    </li>
+                                @endfor
+
+                                {{-- Next --}}
+                                <li class="page-item {{ $places->hasMorePages() ? '' : 'disabled' }}">
+                                    <a class="page-link"
+                                       href="{{ $places->nextPageUrl() ?? '#' }}">
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    @endif
+                    {{-- ================= END PAGINATION ================= --}}
+
                 </div>
             </div>
         </div>

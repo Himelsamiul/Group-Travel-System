@@ -7,6 +7,7 @@ use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\PlaceController;
 use App\Http\Controllers\Backend\HotelController;
+use App\Http\Controllers\Backend\TransportationController;
 
 //admin
 Route::group(['prefix' => 'admin'], function () {
@@ -31,6 +32,13 @@ Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
 Route::get('/hotels/{id}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
 Route::put('/hotels/{id}', [HotelController::class, 'update'])->name('hotels.update');
 Route::delete('/hotels/{id}', [HotelController::class, 'destroy'])->name('hotels.destroy');
+
+// transportation
+Route::get('/transportations', [TransportationController::class, 'index'])->name('transportations.index');
+Route::post('/transportations', [TransportationController::class, 'store'])->name('transportations.store');
+Route::get('/transportations/{id}/edit', [TransportationController::class, 'edit'])->name('transportations.edit');
+Route::put('/transportations/{id}', [TransportationController::class, 'update'])->name('transportations.update');
+Route::delete('/transportations/{id}', [TransportationController::class, 'destroy'])->name('transportations.destroy');
 
     });
 });

@@ -33,6 +33,13 @@
                     <p>Hotel</p>
                 </a>
             </li>
+		 {{-- Tour Packages (future ready) --}}
+            <li class="nav-item">
+                <a href="{{ route('transportations.index') }}">
+                    <i class="la la-automobile"></i>
+                    <p>Transportation</p>
+                </a>
+            </li>
             {{-- Bookings (future) --}}
             <li class="nav-item">
                 <a href="#">
