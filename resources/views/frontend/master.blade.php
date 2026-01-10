@@ -23,8 +23,10 @@
 	<link rel="stylesheet" href="{{url('frontend/css/daterangepicker.css')}}">
 	<link rel="stylesheet" href="{{url('frontend/css/aos.css')}}">
 	<link rel="stylesheet" href="{{url('frontend/css/style.css')}}">
+	<link rel="icon" type="image/png" href="{{ asset('tour.png') }}">
 
-	<title>Tour Free Bootstrap Template for Travel Agency by Untree.co</title>
+
+	<title>BlueWave Tours</title>
 </head>
 
 <body>

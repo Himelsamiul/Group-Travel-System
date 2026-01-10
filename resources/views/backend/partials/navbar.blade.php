@@ -1,6 +1,6 @@
 <div class="logo-header">
-				<a href="index.html" class="logo">
-					Ready Dashboard
+				<a href="{{route('dashboard')}}" class="logo">
+					Tour management 
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -17,8 +17,8 @@
 									<div class="user-box">
 										<div class="u-img"><img src="{{url('backend/assets/img/profile.jpg')}}" alt="user"></div>
 										<div class="u-text">
-											<h4>Hizrian</h4>
-											<p class="text-muted">hello@themekita.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+											<h4>Afia Jahin</h4>
+											<p class="text-muted">aafiajahin@gmail.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
 										</div>
 									</li>
 									<div class="dropdown-divider"></div>
