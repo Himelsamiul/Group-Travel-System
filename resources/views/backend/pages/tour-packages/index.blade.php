@@ -29,7 +29,6 @@
                         <th>Discount %</th>
                         <th>Discount Amount</th>
                         <th>Final Price</th>
-                        <th>Note</th>
                         <th>Status</th>
                         <th>Created</th>
                         <th width="160">Action</th>
@@ -42,6 +41,10 @@
                             $discountPercent = $p->discount ?? 0;
                             $discountAmount = ($p->price_per_person * $discountPercent) / 100;
                             $finalPrice = $p->price_per_person - $discountAmount;
+
+                             $days = \Carbon\Carbon::parse($p->start_date)
+                             ->diffInDays(\Carbon\Carbon::parse($p->end_date)) + 1;
+                                     $nights = $days - 1;
                         @endphp
 
                         <tr>
@@ -73,11 +76,10 @@
                             </td>
 
                             {{-- Days --}}
-                            <td>
-                                {{ \Carbon\Carbon::parse($p->start_date)
-                                    ->diffInDays(\Carbon\Carbon::parse($p->end_date)) + 1 }}
-                                Days
-                            </td>
+<td>
+    <span class="badge badge-primary">{{ $days }}&nbsp;D</span>
+    <span class="badge badge-secondary">{{ $nights }}&nbsp;N</span>
+</td>
 
                             {{-- Price --}}
                             <td>৳{{ number_format($p->price_per_person) }}</td>
@@ -111,10 +113,8 @@
                                 </strong>
                             </td>
 
-                            {{-- Note --}}
-                            <td>
-                                {{ $p->note ?? '-' }}
-                            </td>
+              
+
 
                             {{-- Status --}}
                             <td>
