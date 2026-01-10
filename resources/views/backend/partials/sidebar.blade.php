@@ -1,54 +1,79 @@
-			<div class="sidebar">
-				<div class="scrollbar-inner sidebar-wrapper">
-					<ul class="nav">
-						<li class="nav-item active">
-							<a href="index.html">
-								<i class="la la-dashboard"></i>
-								<p>Dashboard</p>
-								<span class="badge badge-count">5</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="components.html">
-								<i class="la la-table"></i>
-								<p>Components</p>
-								<span class="badge badge-count">14</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="forms.html">
-								<i class="la la-keyboard-o"></i>
-								<p>Forms</p>
-								<span class="badge badge-count">50</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="tables.html">
-								<i class="la la-th"></i>
-								<p>Tables</p>
-								<span class="badge badge-count">6</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="notifications.html">
-								<i class="la la-bell"></i>
-								<p>Notifications</p>
-								<span class="badge badge-success">3</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="typography.html">
-								<i class="la la-font"></i>
-								<p>Typography</p>
-								<span class="badge badge-danger">25</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{{ route('tourists') }}">
-								<i class="la la-fonticons"></i>
-								<p>Clients</p>
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
+<div class="sidebar">
+    <div class="scrollbar-inner sidebar-wrapper">
+        <ul class="nav">
+
+            {{-- Dashboard --}}
+            <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a href="{{ route('dashboard') }}">
+                    <i class="la la-dashboard"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+
+            {{-- Places Management --}}
+            <li class="nav-item {{ request()->routeIs('places.*') ? 'active' : '' }}">
+                <a href="{{ route('places.index') }}">
+                    <i class="la la-map-marker"></i>
+                    <p>Places</p>
+                </a>
+            </li>
+
+            {{-- Tour Packages (future ready) --}}
+            <li class="nav-item">
+                <a href="#">
+                    <i class="la la-suitcase"></i>
+                    <p>Tour Packages</p>
+                </a>
+            </li>
+
+            {{-- Bookings (future) --}}
+            <li class="nav-item">
+                <a href="#">
+                    <i class="la la-calendar-check-o"></i>
+                    <p>Bookings</p>
+                </a>
+            </li>
+
+            {{-- Clients / Tourists --}}
+            <li class="nav-item {{ request()->routeIs('tourists*') ? 'active' : '' }}">
+                <a href="{{ route('tourists') }}">
+                    <i class="la la-users"></i>
+                    <p>Clients</p>
+                </a>
+            </li>
+
+            {{-- Payments (future) --}}
+            <li class="nav-item">
+                <a href="#">
+                    <i class="la la-credit-card"></i>
+                    <p>Payments</p>
+                </a>
+            </li>
+
+            {{-- Reports --}}
+            <li class="nav-item">
+                <a href="#">
+                    <i class="la la-bar-chart"></i>
+                    <p>Reports</p>
+                </a>
+            </li>
+
+            {{-- Settings --}}
+            <li class="nav-item">
+                <a href="#">
+                    <i class="la la-cog"></i>
+                    <p>Settings</p>
+                </a>
+            </li>
+
+            {{-- Logout --}}
+            <li class="nav-item">
+                <a href="{{ route('logout') }}">
+                    <i class="la la-sign-out"></i>
+                    <p>Logout</p>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>

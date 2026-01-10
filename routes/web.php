@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WebAuthController;
 use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\PlaceController;
 
 //admin
 Route::group(['prefix' => 'admin'], function () {
@@ -20,6 +21,13 @@ Route::get('/tourists', [WebAuthController::class, 'touristIndex'])
 
 Route::delete('/tourists/{id}', [WebAuthController::class, 'touristDelete'])
     ->name('tourists.delete');
+
+    //place 
+Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
+Route::post('/places', [PlaceController::class, 'store'])->name('places.store');
+Route::get('/places/{id}/edit', [PlaceController::class, 'edit'])->name('places.edit');
+Route::put('/places/{id}', [PlaceController::class, 'update'])->name('places.update');
+Route::delete('/places/{id}', [PlaceController::class, 'destroy'])->name('places.destroy');
 
     });
 });
