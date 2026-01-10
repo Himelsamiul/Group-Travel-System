@@ -1,7 +1,7 @@
 	<nav class="site-nav">
 		<div class="container">
 			<div class="site-navigation">
-				<a href="index.html" class="logo m-0">Tour <span class="text-primary">.</span></a>
+				<a href="index.html" class="logo m-0">BlueWave Tours <span class="text-primary">.</span></a>
 
 				<ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li class="active"><a href="{{route('home')}}">Home</a></li>

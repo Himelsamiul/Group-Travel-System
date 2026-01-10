@@ -27,7 +27,12 @@ class WebAuthController extends Controller
                 'name' => 'required',
                 'email' => 'required|email|unique:tourists,email',
                 'password' => 'required|min:6',
-                'phone' => 'required|max:11'
+                'phone' => 'required|max:11',
+                'address' => 'required',
+                'gender' => 'required|in:male,female,other',
+                'date_of_birth' => 'required|date',
+                'nationality' => 'required',
+                'nid_passport' => 'required',
             ]);
 
             if ($checkValidation->fails()) {
@@ -39,7 +44,12 @@ class WebAuthController extends Controller
                 'name'     => $request->name,
                 'email'    => $request->email,
                 'password' => bcrypt($request->password),
-                'phone'    => $request->phone
+                'phone'    => $request->phone,
+                'address' => $request->address,
+                'gender' => $request->gender,
+                'date_of_birth' => $request->date_of_birth,
+                'nationality' => $request->nationality,
+                'nid_passport' => $request->nid_passport
             ]);
 
             alert()->success('Success', 'Registration Successful!');
