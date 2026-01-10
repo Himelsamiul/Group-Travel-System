@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'touristGuard' => [
+            'driver' => 'session',
+            'provider' => 'touristProvider',
+        ],
     ],
 
     /*
@@ -64,7 +69,10 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-
+        'touristProvider' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\Tourist::class),
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

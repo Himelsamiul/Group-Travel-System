@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WebAuthController;
 use App\Http\Controllers\WebHomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,12 @@ Route::group(['prefix' => 'admin'], function () {
 //website
 Route::get('/', [WebHomeController::class, 'home'])->name('home');
 Route::get('/about', [WebHomeController::class, 'about'])->name('about');
-Route::get('/contact-us', [WebHomeController::class, 'contact'])->name('contact');
 Route::get('/services', [WebHomeController::class, 'services'])->name('services');
+Route::get('/registration', [WebAuthController::class, 'registration'])->name('web.registration');
+Route::post('/do-registration', [WebAuthController::class, 'doRegistration'])->name('web.do.registration');
+Route::get('/login', [WebAuthController::class, 'login'])->name('web.login');
+Route::post('/do-login', [WebAuthController::class, 'doLogin'])->name('web.do.login');
+Route::group(['middleware' => 'touristAuth'], function () {
+    Route::get('/logout', [WebAuthController::class, 'logout'])->name('web.logout');
+    Route::get('/contact-us', [WebHomeController::class, 'contact'])->name('contact');
+});

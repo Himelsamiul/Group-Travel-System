@@ -1,6 +1,6 @@
-
 <!doctype html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -39,9 +39,9 @@
 		<div class="site-mobile-menu-body"></div>
 	</div>
 
-    @include('frontend.partials.navbar')
+	@include('frontend.partials.navbar')
 
-    @yield('content')
+	@yield('content')
 
 	@include('frontend.partials.footer')
 
@@ -51,7 +51,7 @@
 			<span class="sr-only">Loading...</span>
 		</div>
 	</div>
-
+	@include('sweetalert::alert')
 	<script src="{{url('frontend/js/jquery-3.4.1.min.js')}}"></script>
 	<script src="{{url('frontend/js/popper.min.js')}}"></script>
 	<script src="{{url('frontend/js/bootstrap.min.js')}}"></script>
@@ -66,14 +66,14 @@
 	<script>
 		$(function() {
 			var slides = $('.slides'),
-			images = slides.find('img');
+				images = slides.find('img');
 
 			images.each(function(i) {
 				$(this).attr('data-id', i + 1);
 			})
 
 			var typed = new Typed('.typed-words', {
-				strings: ["San Francisco."," Paris."," New Zealand.", " Maui.", " London."],
+				strings: ["San Francisco.", " Paris.", " New Zealand.", " Maui.", " London."],
 				typeSpeed: 80,
 				backSpeed: 80,
 				backDelay: 4000,
@@ -84,7 +84,7 @@
 					arrayPos++;
 					console.log(arrayPos);
 					$('.slides img').removeClass('active');
-					$('.slides img[data-id="'+arrayPos+'"]').addClass('active');
+					$('.slides img[data-id="' + arrayPos + '"]').addClass('active');
 				}
 
 			});
@@ -92,4 +92,5 @@
 	</script>
 	<script src="{{url('frontend/js/custom.js')}}"></script>
 </body>
+
 </html>
