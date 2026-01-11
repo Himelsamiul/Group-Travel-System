@@ -10,6 +10,8 @@ use App\Http\Controllers\Backend\HotelController;
 use App\Http\Controllers\Backend\TransportationController;
 use App\Http\Controllers\Backend\TourPackageController;
 use App\Http\Controllers\TourController;
+use App\Http\Controllers\TourApplicationController;
+use App\Http\Controllers\Backend\TourApprovalController;
 
 //admin
 Route::group(['prefix' => 'admin'], function () {
@@ -50,6 +52,12 @@ Route::delete('/transportations/{id}', [TransportationController::class, 'destro
     Route::delete('/tour-packages/{id}', [TourPackageController::class, 'destroy'])->name('tour-packages.destroy');
     Route::get('/tour-packages/{id}',[TourPackageController::class, 'show'])->name('tour-packages.show');
 
+// Tour Approvals
+    Route::get('/admin/tour-approvals',[TourApprovalController::class,'index'])->name('admin.tour.approvals');
+    Route::post('/admin/tour-approvals/{id}/approve',[TourApprovalController::class,'approve'])->name('admin.tour.approvals.approve');
+    Route::post('/admin/tour-approvals/{id}/reject',[TourApprovalController::class,'reject'])->name('admin.tour.approvals.reject');
+
+
     });
 });
 
@@ -71,4 +79,7 @@ Route::group(['middleware' => 'touristAuth'], function () {
     Route::get('/contact-us', [WebHomeController::class, 'contact'])->name('contact');
 
        Route::get('/profile', [WebAuthController::class, 'profile'])->name('web.profile');
+// Tour application
+       Route::post('/tour/{package}/apply', [TourApplicationController::class, 'apply'])->name('tour.apply');
+        Route::get('/tour/{package}/apply', [TourApplicationController::class, 'showApplyForm'])->name('tour.apply.form');
 });

@@ -42,7 +42,7 @@
             </li>
             {{-- Bookings (future) --}}
             <li class="nav-item">
-                <a href="#">
+                <a href="{{ route('admin.tour.approvals') }}">
                     <i class="la la-calendar-check-o"></i>
                     <p>Bookings</p>
                 </a>

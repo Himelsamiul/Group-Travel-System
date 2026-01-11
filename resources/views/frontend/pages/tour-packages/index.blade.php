@@ -54,7 +54,14 @@
                                     →
                                     {{ \Carbon\Carbon::parse($p->end_date)->format('d M Y') }}
                                 </li>
-                                <li>👥 Seats: {{ $p->available_seats }}</li>
+                                <li>
+    👥
+    {{ $p->available_seats }}
+    /
+    {{ $p->max_persons }}
+    seats remaining
+</li>
+
                             </ul>
 
                             <div class="mb-3">

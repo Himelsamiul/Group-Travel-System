@@ -9,4 +9,10 @@ class Tourist extends Authenticatable
 {
     use HasFactory;
     protected $guarded = [];
+
+
+        public function tourApplications()
+    {
+        return $this->hasMany(TourApplication::class);
+    }
 }
