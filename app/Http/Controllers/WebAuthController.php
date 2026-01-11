@@ -6,6 +6,9 @@ use App\Models\Tourist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Models\TourApplication;
 use Exception;
 
 class WebAuthController extends Controller
@@ -105,8 +108,67 @@ public function profile()
 {
     try {
         $tourist = Auth::guard('touristGuard')->user();
-        return view('frontend.pages.profile', compact('tourist'));
-    } catch (Exception $e) {
+
+        // ===============================
+        // Tour Application History
+        // ===============================
+        $applications = TourApplication::with([
+                'tourPackage.place'
+            ])
+            ->where('tourist_id', $tourist->id)
+            ->latest()
+            ->get()
+            ->map(function ($app) use ($tourist) {
+
+                // Base price
+                $price = $app->tourPackage->price_per_person ?? 0;
+
+                // Discount
+                $discountPct = $app->tourPackage->discount ?? 0;
+                $discountAmt = ($price * $discountPct) / 100;
+
+                // Final payable
+                $finalAmount = $price - $discountAmt;
+
+                /*
+                |--------------------------------------------------------------------------
+                | FUTURE PAYMENT STRUCTURE (inactive now)
+                |--------------------------------------------------------------------------
+                | These will be linked with payments table later
+                */
+                $totalPaid = 0;              // future: sum(payments.amount)
+                $totalDue  = $finalAmount;   // future: finalAmount - totalPaid
+
+                return [
+                    // Tourist
+                    'name'           => $tourist->name,
+
+                    // Tour info
+                    'place_name'     => $app->tourPackage->place->name ?? '-',
+                    'package_name'   => $app->tourPackage->package_title ?? '-',
+
+                    // Pricing
+                    'price'          => $price,
+                    'discount_pct'   => $discountPct,
+                    'discount_amt'   => $discountAmt,
+                    'final_amount'   => $finalAmount,
+
+                    // Payment (future)
+                    'total_paid'     => $totalPaid,
+                    'total_due'      => $totalDue,
+
+                    // Status & date
+                    'status'         => $app->status,
+                    'applied_at'     => $app->created_at,
+                ];
+            });
+
+        return view(
+            'frontend.pages.profile',
+            compact('tourist', 'applications')
+        );
+
+    } catch (\Exception $e) {
         alert()->error('Error', 'Unable to load profile!');
         return redirect()->back();
     }
