@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\PlaceController;
 use App\Http\Controllers\Backend\HotelController;
 use App\Http\Controllers\Backend\TransportationController;
 use App\Http\Controllers\Backend\TourPackageController;
+use App\Http\Controllers\TourController;
 
 //admin
 Route::group(['prefix' => 'admin'], function () {
@@ -58,6 +59,11 @@ Route::get('/about', [WebHomeController::class, 'about'])->name('about');
 Route::get('/services', [WebHomeController::class, 'services'])->name('services');
 Route::get('/registration', [WebAuthController::class, 'registration'])->name('web.registration');
 Route::post('/do-registration', [WebAuthController::class, 'doRegistration'])->name('web.do.registration');
+
+// Tour listing page
+Route::get('/tour-packages', [TourController::class, 'index'])->name('tour.packages');
+// Tour details page
+Route::get('/tour-packages/{id}', [TourController::class, 'show'])->name('tour.packages.show');
 Route::get('/login', [WebAuthController::class, 'login'])->name('web.login');
 Route::post('/do-login', [WebAuthController::class, 'doLogin'])->name('web.do.login');
 Route::group(['middleware' => 'touristAuth'], function () {
