@@ -119,67 +119,88 @@ class TourPackageController extends Controller
     // UPDATE
     // ===============================
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'package_title'       => 'required|string|max:255',
-            'short_description'   => 'required|string|max:500',
-            'full_description'    => 'required|string',
+{
+    $request->validate([
+        'package_title'       => 'required|string|max:255',
+        'short_description'   => 'required|string|max:500',
+        'full_description'    => 'required|string',
 
-            'place_id'            => 'required|exists:places,id',
+        'place_id'            => 'required|exists:places,id',
 
-            'start_date'          => 'required|date',
-            'end_date'            => 'required|date|after_or_equal:start_date',
+        'start_date'          => 'required|date',
+        'end_date'            => 'required|date|after_or_equal:start_date',
 
-            'max_persons'         => 'required|integer|min:1',
-            'min_persons'         => 'nullable|integer|min:1|lte:max_persons',
+        'max_persons'         => 'required|integer|min:1',
+        'min_persons'         => 'nullable|integer|min:1|lte:max_persons',
 
-            'price_per_person'    => 'required|numeric|min:0',
-            'discount'            => 'nullable|numeric|min:0|max:100',
+        'price_per_person'    => 'required|numeric|min:0',
+        'discount'            => 'nullable|numeric|min:0|max:100',
 
-            'hotel_id'            => 'required|exists:hotels,id',
-            'transportation_id'   => 'required|exists:transportations,id',
+        'hotel_id'            => 'required|exists:hotels,id',
+        'transportation_id'   => 'required|exists:transportations,id',
 
-            'included_items'      => 'required|string',
-            'excluded_items'      => 'nullable|string',
+        'included_items'      => 'required|string',
+        'excluded_items'      => 'nullable|string',
 
-            'thumbnail_image'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'thumbnail_image'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
 
-            'status'              => 'required|in:active,inactive',
-        ]);
+        'status'              => 'required|in:active,inactive',
+    ]);
 
-        $package = TourPackage::findOrFail($id);
+    $package = TourPackage::findOrFail($id);
 
-        // Image Update
-        if ($request->hasFile('thumbnail_image')) {
-            if ($package->thumbnail_image && File::exists(public_path('uploads/tour-packages/'.$package->thumbnail_image))) {
-                File::delete(public_path('uploads/tour-packages/'.$package->thumbnail_image));
-            }
+    // 🔒 Calculate booked seats
+    $bookedSeats = $package->max_persons - $package->available_seats;
 
-            $imageName = time().'.'.$request->thumbnail_image->extension();
-            $request->thumbnail_image->move(public_path('uploads/tour-packages'), $imageName);
-            $package->thumbnail_image = $imageName;
+    // ❌ Prevent logical error
+    if ($request->max_persons < $bookedSeats) {
+        return back()
+            ->withErrors([
+                'max_persons' =>
+                    "You already have {$bookedSeats} booked seats. Max persons cannot be less than booked seats."
+            ])
+            ->withInput();
+    }
+
+    // 🧮 Recalculate available seats safely
+    $newAvailableSeats = $request->max_persons - $bookedSeats;
+
+    // 🖼 Image update
+    if ($request->hasFile('thumbnail_image')) {
+        if ($package->thumbnail_image && File::exists(public_path('uploads/tour-packages/'.$package->thumbnail_image))) {
+            File::delete(public_path('uploads/tour-packages/'.$package->thumbnail_image));
         }
 
-        $package->package_title     = $request->package_title;
-        $package->short_description = $request->short_description;
-        $package->full_description  = $request->full_description;
-        $package->place_id          = $request->place_id;
-        $package->start_date        = $request->start_date;
-        $package->end_date          = $request->end_date;
-        $package->max_persons       = $request->max_persons;
-        $package->min_persons       = $request->min_persons;
-        $package->price_per_person  = $request->price_per_person;
-        $package->discount          = $request->discount;
-        $package->hotel_id          = $request->hotel_id;
-        $package->transportation_id = $request->transportation_id;
-        $package->included_items    = $request->included_items;
-        $package->excluded_items    = $request->excluded_items;
-        $package->status            = $request->status;
-        $package->save();
-
-        alert()->success('Success', 'Tour package updated successfully!');
-        return redirect()->route('tour-packages.index');
+        $imageName = time().'.'.$request->thumbnail_image->extension();
+        $request->thumbnail_image->move(public_path('uploads/tour-packages'), $imageName);
+        $package->thumbnail_image = $imageName;
     }
+
+    // 📝 Update fields
+    $package->package_title      = $request->package_title;
+    $package->short_description  = $request->short_description;
+    $package->full_description   = $request->full_description;
+    $package->place_id           = $request->place_id;
+    $package->start_date         = $request->start_date;
+    $package->end_date           = $request->end_date;
+    $package->max_persons        = $request->max_persons;
+    $package->min_persons        = $request->min_persons;
+    $package->available_seats    = $newAvailableSeats;
+    $package->price_per_person   = $request->price_per_person;
+    $package->discount           = $request->discount;
+    $package->hotel_id           = $request->hotel_id;
+    $package->transportation_id  = $request->transportation_id;
+    $package->included_items     = $request->included_items;
+    $package->excluded_items     = $request->excluded_items;
+    $package->status             = $request->status;
+
+    $package->save();
+
+    alert()->success('Success', 'Tour package updated successfully!');
+    return redirect()->route('tour-packages.index');
+}
+
+    
 
     // ===============================
     // DELETE

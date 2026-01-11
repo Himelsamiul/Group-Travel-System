@@ -25,10 +25,17 @@
                         <th>Place</th>
                         <th>Schedule</th>
                         <th>Days</th>
+
                         <th>Price</th>
                         <th>Discount %</th>
                         <th>Discount Amount</th>
                         <th>Final Price</th>
+
+                        {{-- ✅ Seat Info --}}
+                        <th>Total Seats</th>
+                        <th>Booked</th>
+                        <th>Available</th>
+
                         <th>Status</th>
                         <th>Created</th>
                         <th width="160">Action</th>
@@ -42,9 +49,14 @@
                             $discountAmount = ($p->price_per_person * $discountPercent) / 100;
                             $finalPrice = $p->price_per_person - $discountAmount;
 
-                             $days = \Carbon\Carbon::parse($p->start_date)
-                             ->diffInDays(\Carbon\Carbon::parse($p->end_date)) + 1;
-                                     $nights = $days - 1;
+                            $days = \Carbon\Carbon::parse($p->start_date)
+                                    ->diffInDays(\Carbon\Carbon::parse($p->end_date)) + 1;
+                            $nights = $days - 1;
+
+                            // ✅ Seat calculation
+                            $totalSeats = $p->max_persons;
+                            $availableSeats = $p->available_seats;
+                            $bookedSeats = $totalSeats - $availableSeats;
                         @endphp
 
                         <tr>
@@ -58,9 +70,7 @@
                             </td>
 
                             {{-- Title --}}
-                            <td>
-                                <strong>{{ $p->package_title }}</strong>
-                            </td>
+                            <td><strong>{{ $p->package_title }}</strong></td>
 
                             {{-- Short Description --}}
                             <td>{{ $p->short_description }}</td>
@@ -76,10 +86,10 @@
                             </td>
 
                             {{-- Days --}}
-<td>
-    <span class="badge badge-primary">{{ $days }}&nbsp;D</span>
-    <span class="badge badge-secondary">{{ $nights }}&nbsp;N</span>
-</td>
+                            <td>
+                                <span class="badge badge-primary">{{ $days }} D</span>
+                                <span class="badge badge-secondary">{{ $nights }} N</span>
+                            </td>
 
                             {{-- Price --}}
                             <td>৳{{ number_format($p->price_per_person) }}</td>
@@ -113,8 +123,30 @@
                                 </strong>
                             </td>
 
-              
+                            {{-- ✅ Seat Info --}}
+                            <td>
+                                <span class="badge badge-dark">
+                                    {{ $totalSeats }}
+                                </span>
+                            </td>
 
+                            <td>
+                                <span class="badge badge-warning">
+                                    {{ $bookedSeats }}
+                                </span>
+                            </td>
+
+                            <td>
+                                @if($availableSeats > 0)
+                                    <span class="badge badge-success">
+                                        {{ $availableSeats }}
+                                    </span>
+                                @else
+                                    <span class="badge badge-danger">
+                                        Full
+                                    </span>
+                                @endif
+                            </td>
 
                             {{-- Status --}}
                             <td>
@@ -124,18 +156,16 @@
                             </td>
 
                             {{-- Created --}}
-                            <td>
-                                {{ $p->created_at->format('d M Y') }}
-                            </td>
+                            <td>{{ $p->created_at->format('d M Y') }}</td>
 
                             {{-- Action --}}
                             <td>
-
                                 <a href="{{ route('tour-packages.show',$p->id) }}"
                                    class="btn btn-sm btn-secondary">
                                    View
-                               </a>
-                                 <a href="{{ route('tour-packages.edit',$p->id) }}"
+                                </a>
+
+                                <a href="{{ route('tour-packages.edit',$p->id) }}"
                                    class="btn btn-sm btn-info">
                                     Edit
                                 </a>
@@ -154,7 +184,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="15" class="text-center text-muted">
+                            <td colspan="18" class="text-center text-muted">
                                 No tour packages found
                             </td>
                         </tr>
