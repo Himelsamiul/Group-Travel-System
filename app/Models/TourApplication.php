@@ -19,6 +19,9 @@ class TourApplication extends Model
         'note_name',
         'special_note',
         'status',
+        'payment_status',
+        'final_amount',
+        'dues',
     ];
 
     /*

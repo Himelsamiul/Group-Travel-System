@@ -53,6 +53,24 @@ class TourApprovalController extends Controller
         return back()->with('success', 'Application approved and seat updated.');
     }
 
+    public function complete_payment($id)
+    {
+        DB::transaction(function () use ($id) {
+
+            $application = TourApplication::with('tourPackage')->findOrFail($id);
+
+            if ($application->payment_status !== 'Paid') {
+
+                // Update application status
+                $application->payment_status = 'Paid';
+                $application->dues = 0;
+                $application->save();
+            }
+        });
+
+        return back()->with('success', 'Payment Complete.');
+    }
+
     /**
      * Reject a tour application
      * - Only pending can be rejected

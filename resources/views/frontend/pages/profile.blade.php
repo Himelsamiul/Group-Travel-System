@@ -69,10 +69,11 @@
                             <th>Discount</th>
                             <th>Discount Amt</th>
                             <th>Final Payable</th>
-                            <th>Paid</th>
+                            <th>Payment Status</th>
                             <th>Due</th>
                             <th>Status</th>
                             <th>Applied At</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
@@ -96,7 +97,7 @@
                                     ৳{{ number_format($app['final_amount']) }}
                                 </td>
 
-                                <td>৳{{ number_format($app['total_paid']) }}</td>
+                                <td>{{ $app['payment_status'] }}</td>
 
                                 <td>
                                     <strong class="text-warning">
@@ -115,6 +116,21 @@
                                 </td>
 
                                 <td>{{ $app['applied_at']->format('d M Y') }}</td>
+                                @php
+                                    $created = $app['applied_at']; // Carbon instance
+                                    $showPaymentButton = $app['status'] === 'accepted'
+                                                        && $app['total_due'] > 0
+                                                        && $app['payment_status'] === 'pending'
+                                                        && $created->diffInHours(now()) >= 24; // older than 1 day
+                                @endphp
+
+                                @if($showPaymentButton)
+                                    <a href="{{ route('tour.payment.start', $app['application_id']) }}"
+                                    class="badge bg-primary text-white">
+                                        Make Payment
+                                    </a>
+                                @endif
+
                             </tr>
                         @empty
                             <tr>

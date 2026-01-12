@@ -12,6 +12,7 @@ use App\Http\Controllers\Backend\TourPackageController;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\TourApplicationController;
 use App\Http\Controllers\Backend\TourApprovalController;
+use App\Http\Controllers\PaymentController;
 
 //admin
 Route::group(['prefix' => 'admin'], function () {
@@ -22,49 +23,48 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
         // Admin - Tourist Management (using WebAuthController)
-Route::get('/tourists', [WebAuthController::class, 'touristIndex'])->name('tourists');
-Route::delete('/tourists/{id}', [WebAuthController::class, 'touristDelete'])->name('tourists.delete');
-    //place 
-Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
-Route::post('/places', [PlaceController::class, 'store'])->name('places.store');
-Route::get('/places/{id}/edit', [PlaceController::class, 'edit'])->name('places.edit');
-Route::put('/places/{id}', [PlaceController::class, 'update'])->name('places.update');
-Route::delete('/places/{id}', [PlaceController::class, 'destroy'])->name('places.destroy');
-// hotel
-Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
-Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
-Route::get('/hotels/{id}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
-Route::put('/hotels/{id}', [HotelController::class, 'update'])->name('hotels.update');
-Route::delete('/hotels/{id}', [HotelController::class, 'destroy'])->name('hotels.destroy');
+        Route::get('/tourists', [WebAuthController::class, 'touristIndex'])->name('tourists');
+        Route::delete('/tourists/{id}', [WebAuthController::class, 'touristDelete'])->name('tourists.delete');
+        //place 
+        Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
+        Route::post('/places', [PlaceController::class, 'store'])->name('places.store');
+        Route::get('/places/{id}/edit', [PlaceController::class, 'edit'])->name('places.edit');
+        Route::put('/places/{id}', [PlaceController::class, 'update'])->name('places.update');
+        Route::delete('/places/{id}', [PlaceController::class, 'destroy'])->name('places.destroy');
+        // hotel
+        Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
+        Route::post('/hotels', [HotelController::class, 'store'])->name('hotels.store');
+        Route::get('/hotels/{id}/edit', [HotelController::class, 'edit'])->name('hotels.edit');
+        Route::put('/hotels/{id}', [HotelController::class, 'update'])->name('hotels.update');
+        Route::delete('/hotels/{id}', [HotelController::class, 'destroy'])->name('hotels.destroy');
 
-// transportation
-Route::get('/transportations', [TransportationController::class, 'index'])->name('transportations.index');
-Route::post('/transportations', [TransportationController::class, 'store'])->name('transportations.store');
-Route::get('/transportations/{id}/edit', [TransportationController::class, 'edit'])->name('transportations.edit');
-Route::put('/transportations/{id}', [TransportationController::class, 'update'])->name('transportations.update');
-Route::delete('/transportations/{id}', [TransportationController::class, 'destroy'])->name('transportations.destroy');
-//packages
-    Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
-    Route::get('/tour-packages/create', [TourPackageController::class, 'create'])->name('tour-packages.create');
-    Route::post('/tour-packages', [TourPackageController::class, 'store'])->name('tour-packages.store');
-    Route::get('/tour-packages/{id}/edit', [TourPackageController::class, 'edit'])->name('tour-packages.edit');
-    Route::put('/tour-packages/{id}', [TourPackageController::class, 'update'])->name('tour-packages.update');
-    Route::delete('/tour-packages/{id}', [TourPackageController::class, 'destroy'])->name('tour-packages.destroy');
-    Route::get('/tour-packages/{id}',[TourPackageController::class, 'show'])->name('tour-packages.show');
+        // transportation
+        Route::get('/transportations', [TransportationController::class, 'index'])->name('transportations.index');
+        Route::post('/transportations', [TransportationController::class, 'store'])->name('transportations.store');
+        Route::get('/transportations/{id}/edit', [TransportationController::class, 'edit'])->name('transportations.edit');
+        Route::put('/transportations/{id}', [TransportationController::class, 'update'])->name('transportations.update');
+        Route::delete('/transportations/{id}', [TransportationController::class, 'destroy'])->name('transportations.destroy');
+        //packages
+        Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
+        Route::get('/tour-packages/create', [TourPackageController::class, 'create'])->name('tour-packages.create');
+        Route::post('/tour-packages', [TourPackageController::class, 'store'])->name('tour-packages.store');
+        Route::get('/tour-packages/{id}/edit', [TourPackageController::class, 'edit'])->name('tour-packages.edit');
+        Route::put('/tour-packages/{id}', [TourPackageController::class, 'update'])->name('tour-packages.update');
+        Route::delete('/tour-packages/{id}', [TourPackageController::class, 'destroy'])->name('tour-packages.destroy');
+        Route::get('/tour-packages/{id}', [TourPackageController::class, 'show'])->name('tour-packages.show');
 
-// Tour Approvals
-    Route::get('/admin/tour-approvals',[TourApprovalController::class,'index'])->name('admin.tour.approvals');
-    Route::post('/admin/tour-approvals/{id}/approve',[TourApprovalController::class,'approve'])->name('admin.tour.approvals.approve');
-    Route::post('/admin/tour-approvals/{id}/reject',[TourApprovalController::class,'reject'])->name('admin.tour.approvals.reject');
-
-
+        // Tour Approvals
+        Route::get('/admin/tour-approvals', [TourApprovalController::class, 'index'])->name('admin.tour.approvals');
+        Route::post('/admin/tour-approvals/{id}/approve', [TourApprovalController::class, 'approve'])->name('admin.tour.approvals.approve');
+        Route::post('/admin/tour-payment/{id}/complete', [TourApprovalController::class, 'complete_payment'])->name('admin.tour.payment.complete');
+        Route::post('/admin/tour-approvals/{id}/reject', [TourApprovalController::class, 'reject'])->name('admin.tour.approvals.reject');
     });
 });
 
 //website
 Route::get('/', [WebHomeController::class, 'home'])->name('home');
 Route::get('/about', [WebHomeController::class, 'about'])->name('about');
-Route::get('/services', [WebHomeController::class, 'services'])->name('services');
+// Route::get('/services', [WebHomeController::class, 'services'])->name('services');
 Route::get('/registration', [WebAuthController::class, 'registration'])->name('web.registration');
 Route::post('/do-registration', [WebAuthController::class, 'doRegistration'])->name('web.do.registration');
 
@@ -78,8 +78,10 @@ Route::group(['middleware' => 'touristAuth'], function () {
     Route::get('/logout', [WebAuthController::class, 'logout'])->name('web.logout');
     Route::get('/contact-us', [WebHomeController::class, 'contact'])->name('contact');
 
-       Route::get('/profile', [WebAuthController::class, 'profile'])->name('web.profile');
-// Tour application
-       Route::post('/tour/{package}/apply', [TourApplicationController::class, 'apply'])->name('tour.apply');
-        Route::get('/tour/{package}/apply', [TourApplicationController::class, 'showApplyForm'])->name('tour.apply.form');
+    Route::get('/profile', [WebAuthController::class, 'profile'])->name('web.profile');
+    // Tour application
+    Route::post('/tour/{package}/apply', [TourApplicationController::class, 'apply'])->name('tour.apply');
+    Route::get('/tour/{package}/apply', [TourApplicationController::class, 'showApplyForm'])->name('tour.apply.form');
+    Route::get('/tour/payment/{id}', [PaymentController::class, 'start'])->name('tour.payment.start');
 });
+Route::get('/tour/payment/callback', [PaymentController::class, 'callback'])->name('tour.payment.callback');

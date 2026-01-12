@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('address');
             $table->string('city');
             $table->string('emergency_contact');
+            $table->integer('final_amount');
+            $table->integer('due');
 
             // Optional fields
             $table->string('note_name')->nullable();
@@ -28,6 +30,8 @@ return new class extends Migration
             // Status
             $table->enum('status', ['pending', 'accepted', 'rejected'])
                   ->default('pending');
+
+            $table->string('payment_status');
 
             $table->timestamps();
         });

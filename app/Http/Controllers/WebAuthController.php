@@ -141,6 +141,7 @@ public function profile()
 
                 return [
                     // Tourist
+                    'application_id' => $app->id,
                     'name'           => $tourist->name,
 
                     // Tour info
@@ -151,14 +152,13 @@ public function profile()
                     'price'          => $price,
                     'discount_pct'   => $discountPct,
                     'discount_amt'   => $discountAmt,
-                    'final_amount'   => $finalAmount,
+                    'final_amount'   => $app->final_amount,
 
-                    // Payment (future)
-                    'total_paid'     => $totalPaid,
-                    'total_due'      => $totalDue,
+                    'total_due'      => $app->dues,
 
                     // Status & date
                     'status'         => $app->status,
+                    'payment_status'         => $app->payment_status,
                     'applied_at'     => $app->created_at,
                 ];
             });

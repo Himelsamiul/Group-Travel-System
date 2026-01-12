@@ -11,14 +11,13 @@
 				<div class="container-fluid">
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 						<li class="nav-item dropdown">
-							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{{url('backend/assets/img/profile.jpg')}}" alt="user-img" width="36" class="img-circle"><span >Afia Jahin</span></span> </a>
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"><span >Afia Jahin</span></span> </a>
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
-										<div class="u-img"><img src="{{url('backend/assets/img/profile.jpg')}}" alt="user"></div>
 										<div class="u-text">
 											<h4>Afia Jahin</h4>
-											<p class="text-muted">aafiajahin@gmail.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+											<p class="text-muted">aafiajahin@gmail.com</p></div>
 										</div>
 									</li>
 									<div class="dropdown-divider"></div>

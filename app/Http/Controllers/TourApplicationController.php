@@ -25,7 +25,7 @@ class TourApplicationController extends Controller
         // ❌ Already pending / accepted
         $alreadyApplied = TourApplication::where('tourist_id', $tourist->id)
             ->where('tour_package_id', $package->id)
-            ->whereIn('status', ['pending','accepted'])
+            ->whereIn('status', ['pending', 'accepted'])
             ->exists();
 
         if ($alreadyApplied) {
@@ -34,7 +34,7 @@ class TourApplicationController extends Controller
                 ->with('error', 'You already applied for this tour.');
         }
 
-        return view('frontend.pages.apply', compact('package','tourist'));
+        return view('frontend.pages.apply', compact('package', 'tourist'));
     }
 
     // ===============================
@@ -42,6 +42,7 @@ class TourApplicationController extends Controller
     // ===============================
     public function apply(Request $request, TourPackage $package)
     {
+        // dd($package);
         $tourist = auth()->guard('touristGuard')->user();
 
         // ❌ Seat full safety
@@ -54,7 +55,7 @@ class TourApplicationController extends Controller
         // ❌ Duplicate apply safety
         $alreadyApplied = TourApplication::where('tourist_id', $tourist->id)
             ->where('tour_package_id', $package->id)
-            ->whereIn('status', ['pending','accepted'])
+            ->whereIn('status', ['pending', 'accepted'])
             ->exists();
 
         if ($alreadyApplied) {
@@ -71,6 +72,11 @@ class TourApplicationController extends Controller
             'emergency_contact' => 'required',
         ]);
 
+        $amount = $package->price_per_person;
+        $discount = $package->discount;
+        $discount_amount = ($amount * $discount) / 100;
+        $final_amount = $amount - $discount_amount;
+        // dd($final_amount);
         // ✅ Create application
         TourApplication::create([
             'tourist_id'        => $tourist->id,
@@ -80,10 +86,13 @@ class TourApplicationController extends Controller
             'city'              => $request->city,
             'emergency_contact' => $request->emergency_contact,
             'status'            => 'pending',
+            'final_amount'            => $final_amount,
+            'dues'            => $final_amount,
+            'payment_status'            => 'Pending',
         ]);
 
         return redirect()
             ->route('tour.packages.show', $package->id)
-            ->with('success', 'Application submitted. Waiting for admin review.');
+            ->with('success', 'Application submitted. Waiting for admin approval.After admin approval, if payment is not completed within 1 days, the make payment button will not be visible');
     }
 }

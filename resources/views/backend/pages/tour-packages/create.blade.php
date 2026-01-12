@@ -63,6 +63,7 @@
                         <input type="date"
                                name="start_date"
                                value="{{ old('start_date') }}"
+                               min="{{ date('Y-m-d') }}"
                                class="form-control @error('start_date') is-invalid @enderror"
                                required>
                         @error('start_date')
@@ -75,6 +76,7 @@
                         <label>End Date *</label>
                         <input type="date"
                                name="end_date"
+                               min="{{ date('Y-m-d') }}"
                                value="{{ old('end_date') }}"
                                class="form-control @error('end_date') is-invalid @enderror"
                                required>

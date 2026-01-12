@@ -20,24 +20,23 @@
 
             {{-- Tour Packages (future ready) --}}
             <li class="nav-item">
-                <a href="{{ route('tour-packages.index') }}">
-                    <i class="la la-suitcase"></i>
-                    <p>Tour Packages</p>
+                <a href="{{ route('transportations.index') }}">
+                    <i class="la la-automobile"></i>
+                    <p>Transportation</p>
                 </a>
             </li>
-
-		 {{-- Tour Packages (future ready) --}}
+            {{-- Tour Packages (future ready) --}}
             <li class="nav-item">
                 <a href="{{ route('hotels.index') }}">
                     <i class="la la-hotel"></i>
                     <p>Hotel</p>
                 </a>
             </li>
-		 {{-- Tour Packages (future ready) --}}
+            {{-- Tour Packages (future ready) --}}
             <li class="nav-item">
-                <a href="{{ route('transportations.index') }}">
-                    <i class="la la-automobile"></i>
-                    <p>Transportation</p>
+                <a href="{{ route('tour-packages.index') }}">
+                    <i class="la la-suitcase"></i>
+                    <p>Tour Packages</p>
                 </a>
             </li>
             {{-- Bookings (future) --}}
@@ -73,12 +72,12 @@
             </li>
 
             {{-- Settings --}}
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="#">
                     <i class="la la-cog"></i>
                     <p>Settings</p>
                 </a>
-            </li>
+            </li> -->
 
             {{-- Logout --}}
             <li class="nav-item">

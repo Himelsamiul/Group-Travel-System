@@ -16,7 +16,7 @@
         <div class="card-body table-responsive">
 
             <table class="table table-bordered table-striped align-middle">
-                <thead class="table-dark">
+                <thead class="table-white">
                     <tr>
                         <th>#</th>
 
@@ -41,11 +41,11 @@
 
                         {{-- Pricing --}}
                         <th>Amount</th>
-                        <th>Discount</th>
-                        <th>Final Amount</th>
+                        <th>Dues</th>
 
                         {{-- Status --}}
                         <th>Status</th>
+                        <th>Payment Status</th>
                         <th>Applied At</th>
 
                         {{-- Action --}}
@@ -85,23 +85,14 @@
                             {{-- Tour --}}
                             <td>{{ $app->tourPackage->package_title ?? '-' }}</td>
 
-                            {{-- Pricing --}}
-                            <td>৳{{ number_format($price) }}</td>
-
-                            <td>
-                                @if($discount > 0)
-                                    {{ $discount }}% <br>
-                                    <small class="text-danger">
-                                        (-৳{{ number_format($discountAmount) }})
-                                    </small>
-                                @else
-                                    —
-                                @endif
-                            </td>
-
                             <td>
                                 <strong class="text-success">
-                                    ৳{{ number_format($finalAmount) }}
+                                    ৳{{ number_format($app->final_amount) }}
+                                </strong>
+                            </td>
+                            <td>
+                                <strong class="text-success">
+                                    ৳{{ number_format($app->dues) }}
                                 </strong>
                             </td>
 
@@ -115,12 +106,20 @@
                                     <span class="badge bg-danger">Rejected</span>
                                 @endif
                             </td>
+                            <td>
+                                {{ $app->payment_status }}
+                            </td>
 
                             <td>{{ $app->created_at->format('d M Y') }}</td>
 
                             {{-- Action --}}
                             <td>
-                                @if($app->status === 'pending')
+                                @php
+                                    $created = $app->created_at; // Carbon instance
+                                    $showApprovalButtons = $app->status === 'pending'
+                                                        && $created->diffInHours(now()) < 24;
+                                @endphp
+                                @if($showApprovalButtons)
                                     <form action="{{ route('admin.tour.approvals.approve', $app->id) }}"
                                           method="POST" style="display:inline;">
                                         @csrf
@@ -136,6 +135,15 @@
                                         <button class="btn btn-sm btn-danger"
                                             onclick="return confirm('Reject this application?')">
                                             Reject
+                                        </button>
+                                    </form>
+                                @elseif($app->payment_status === 'Partial paid')
+                                    <form action="{{ route('admin.tour.payment.complete', $app->id) }}"
+                                          method="POST" style="display:inline;">
+                                        @csrf
+                                        <button class="btn btn-sm btn-success"
+                                            onclick="return confirm('Complete this Payment For this Booking?')">
+                                            Complete Payment
                                         </button>
                                     </form>
                                 @else
