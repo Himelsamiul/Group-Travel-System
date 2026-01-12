@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('emergency_contact');
             $table->integer('final_amount');
-            $table->integer('due');
+            $table->integer('dues');
 
             // Optional fields
             $table->string('note_name')->nullable();

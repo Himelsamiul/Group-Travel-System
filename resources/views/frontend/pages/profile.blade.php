@@ -120,7 +120,7 @@
                                     $created = $app['applied_at']; // Carbon instance
                                     $showPaymentButton = $app['status'] === 'accepted'
                                                         && $app['total_due'] > 0
-                                                        && $app['payment_status'] === 'pending'
+                                                        && $app['payment_status'] === 'Pending'
                                                         && $created->diffInHours(now()) >= 24; // older than 1 day
                                 @endphp
 
