@@ -120,17 +120,17 @@
                                     $created = $app['applied_at']; // Carbon instance
                                     $showPaymentButton = $app['status'] === 'accepted'
                                                         && $app['total_due'] > 0
-                                                        && $app['payment_status'] === 'pending'
-                                                        && $created->diffInHours(now()) >= 24; // older than 1 day
+                                                        && $app['payment_status'] === 'Pending'
+                                                        && $created->diffInHours(now()) < 24; // older than 1 day
                                 @endphp
-
-                                @if($showPaymentButton)
-                                    <a href="{{ route('tour.payment.start', $app['application_id']) }}"
-                                    class="badge bg-primary text-white">
-                                        Make Payment
-                                    </a>
-                                @endif
-
+                                <td>
+                                    @if($showPaymentButton)
+                                        <a href="{{ route('tour.payment.start', $app['application_id']) }}"
+                                        class="badge bg-primary text-white">
+                                            Make Payment
+                                        </a>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>

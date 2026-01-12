@@ -116,10 +116,10 @@
                             <td>
                                 @php
                                     $created = $app->created_at;
-                                    $showApprovalButtons = $app->status === 'accepted' && $app->payment_status === 'Pending'
+                                    $showrejectButtons = $app->status === 'accepted' && $app->payment_status === 'Pending'
                                                         && $created->diffInHours(now()) > 24;
                                 @endphp
-                                @if($showApprovalButtons)
+                                @if($showrejectButtons)
                                     <form action="{{ route('admin.tour.approvals.reject', $app->id) }}"
                                           method="POST" style="display:inline;">
                                         @csrf
@@ -147,7 +147,7 @@
                                             Reject
                                         </button>
                                     </form>
-                                @elseif($app->payment_status === 'Partial paid')
+                                @elseif($app->payment_status === 'Partial Paid')
                                     <form action="{{ route('admin.tour.payment.complete', $app->id) }}"
                                           method="POST" style="display:inline;">
                                         @csrf
