@@ -80,10 +80,8 @@ class TourApprovalController extends Controller
     {
         $application = TourApplication::findOrFail($id);
 
-        if ($application->status === 'pending') {
             $application->status = 'rejected';
             $application->save();
-        }
 
         return back()->with('success', 'Application rejected.');
     }

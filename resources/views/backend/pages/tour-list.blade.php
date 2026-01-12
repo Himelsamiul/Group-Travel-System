@@ -115,11 +115,21 @@
                             {{-- Action --}}
                             <td>
                                 @php
-                                    $created = $app->created_at; // Carbon instance
-                                    $showApprovalButtons = $app->status === 'pending'
-                                                        && $created->diffInHours(now()) < 24;
+                                    $created = $app->created_at;
+                                    $showApprovalButtons = $app->status === 'accepted' && $app->payment_status === 'Pending'
+                                                        && $created->diffInHours(now()) > 24;
                                 @endphp
                                 @if($showApprovalButtons)
+                                    <form action="{{ route('admin.tour.approvals.reject', $app->id) }}"
+                                          method="POST" style="display:inline;">
+                                        @csrf
+                                        <button class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Reject this application?')">
+                                            Reject
+                                        </button>
+                                    </form>
+                                @endif
+                                @if($app->status === 'pending')
                                     <form action="{{ route('admin.tour.approvals.approve', $app->id) }}"
                                           method="POST" style="display:inline;">
                                         @csrf
@@ -146,8 +156,6 @@
                                             Complete Payment
                                         </button>
                                     </form>
-                                @else
-                                    <span class="text-muted">No Action</span>
                                 @endif
                             </td>
                         </tr>
