@@ -9,6 +9,8 @@
 	<link rel="stylesheet" href="{{url('backend/assets/css/ready.css')}}">
 	<link rel="stylesheet" href="{{url('backend/assets/css/demo.css')}}">
 	<link rel="icon" type="image/png" href="{{ asset('tour.png') }}">
+	<link rel="stylesheet" href="{{ url('backend/assets/css/custom.css') }}">
+
 
 </head>
 <body>

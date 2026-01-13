@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\TourApplication;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\TourPackage;
 
 class TourApprovalController extends Controller
 {
@@ -78,5 +81,53 @@ class TourApprovalController extends Controller
             $application->save();
 
         return back()->with('success', 'Application rejected.');
+    }
+
+
+ public function report(Request $request)
+    {
+        $query = TourApplication::with(['tourist', 'tourPackage']);
+
+        // ---------------- FILTERS ----------------
+
+        // Tourist name
+        if ($request->tourist_name) {
+            $query->whereHas('tourist', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->tourist_name . '%');
+            });
+        }
+
+        // Package
+        if ($request->tour_package_id) {
+            $query->where('tour_package_id', $request->tour_package_id);
+        }
+
+        // Phone
+        if ($request->phone) {
+            $query->where('phone', 'like', '%' . $request->phone . '%');
+        }
+
+        // Booking status
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+
+        // Date range
+        if ($request->from_date && $request->to_date) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($request->from_date)->startOfDay(),
+                Carbon::parse($request->to_date)->endOfDay(),
+            ]);
+        }
+
+        // ---------------- DATA ----------------
+        $applications = $query->latest()->get();
+        $packages     = TourPackage::all();
+
+        return view('backend.pages.reports', compact(
+            'applications',
+            'packages'
+        ));
     }
 }

@@ -56,16 +56,16 @@
             </li>
 
             {{-- Payments (future) --}}
-            <li class="nav-item">
+            <!--<li class="nav-item">
                 <a href="#">
                     <i class="la la-credit-card"></i>
                     <p>Payments</p>
                 </a>
-            </li>
+            </li>-->
 
             {{-- Reports --}}
             <li class="nav-item">
-                <a href="#">
+                <a href="{{ route('admin.reports') }}">
                     <i class="la la-bar-chart"></i>
                     <p>Reports</p>
                 </a>

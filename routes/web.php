@@ -58,6 +58,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/admin/tour-approvals/{id}/approve', [TourApprovalController::class, 'approve'])->name('admin.tour.approvals.approve');
         Route::post('/admin/tour-payment/{id}/complete', [TourApprovalController::class, 'complete_payment'])->name('admin.tour.payment.complete');
         Route::post('/admin/tour-approvals/{id}/reject', [TourApprovalController::class, 'reject'])->name('admin.tour.approvals.reject');
+            // Reports page
+        Route::get('/admin/reports', [TourApprovalController::class, 'report'])->name('admin.reports');
     });
 });
 
