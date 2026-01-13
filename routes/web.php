@@ -25,6 +25,7 @@ Route::group(['prefix' => 'admin'], function () {
         // Admin - Tourist Management (using WebAuthController)
         Route::get('/tourists', [WebAuthController::class, 'touristIndex'])->name('tourists');
         Route::delete('/tourists/{id}', [WebAuthController::class, 'touristDelete'])->name('tourists.delete');
+        Route::put('/tourists/{id}/status', [WebAuthController::class, 'toggleTouristStatus'])->name('tourists.toggleStatus');
         //place 
         Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
         Route::post('/places', [PlaceController::class, 'store'])->name('places.store');

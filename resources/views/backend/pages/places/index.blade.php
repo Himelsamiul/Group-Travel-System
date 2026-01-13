@@ -46,10 +46,12 @@
                         <div class="form-group mb-3">
                             <label>Status <span class="text-danger">*</span></label>
                             <select name="status" class="form-control" required>
-                                <option value="active" {{ (isset($place) && $place->status=='active')?'selected':'' }}>
+                                <option value="active"
+                                    {{ (isset($place) && $place->status=='active')?'selected':'' }}>
                                     Active
                                 </option>
-                                <option value="inactive" {{ (isset($place) && $place->status=='inactive')?'selected':'' }}>
+                                <option value="inactive"
+                                    {{ (isset($place) && $place->status=='inactive')?'selected':'' }}>
                                     Inactive
                                 </option>
                             </select>
@@ -65,7 +67,8 @@
                         </button>
 
                         @if(isset($place))
-                            <a href="{{ route('places.index') }}" class="btn btn-secondary w-100 mt-2">
+                            <a href="{{ route('places.index') }}"
+                               class="btn btn-secondary w-100 mt-2">
                                 Cancel
                             </a>
                         @endif
@@ -91,7 +94,7 @@
                                 <th>Status</th>
                                 <th>Note</th>
                                 <th>Date</th>
-                                <th width="140">Action</th>
+                                <th width="160">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -100,28 +103,45 @@
                                     <td>{{ $places->firstItem() + $key }}</td>
                                     <td>{{ $p->country }}</td>
                                     <td>{{ $p->name }}</td>
+
                                     <td>
                                         <span class="badge {{ $p->status=='active'?'badge-success':'badge-secondary' }}">
                                             {{ ucfirst($p->status) }}
                                         </span>
                                     </td>
+
                                     <td>{{ $p->note }}</td>
                                     <td>{{ $p->created_at->format('d M, Y') }}</td>
+
                                     <td>
-                                        <a href="{{ route('places.edit',$p->id) }}" class="btn btn-sm btn-info">
+                                        {{-- EDIT --}}
+                                        <a href="{{ route('places.edit',$p->id) }}"
+                                           class="btn btn-sm btn-info mb-1">
                                             Edit
                                         </a>
 
-                                        <form action="{{ route('places.destroy',$p->id) }}"
-                                              method="POST"
-                                              class="d-inline"
-                                              onsubmit="return confirm('Delete this place?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-sm btn-danger">
+                                        {{-- DELETE (LOCKED IF USED) --}}
+                                        @if($p->tour_packages_count > 0)
+                                            <button class="btn btn-sm btn-secondary mb-1"
+                                                    disabled
+                                                    title="This place is used in tour packages">
                                                 Delete
                                             </button>
-                                        </form>
+                                            <div class="text-danger small">
+                                                Used in tour packages
+                                            </div>
+                                        @else
+                                            <form action="{{ route('places.destroy',$p->id) }}"
+                                                  method="POST"
+                                                  class="d-inline"
+                                                  onsubmit="return confirm('Delete this place?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-danger mb-1">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
@@ -134,7 +154,7 @@
                         </tbody>
                     </table>
 
-                    {{-- ================= CUSTOM PAGINATION ================= --}}
+                    {{-- ================= PAGINATION ================= --}}
                     @if ($places->lastPage() > 1)
                         <nav class="d-flex justify-content-between align-items-center mt-3">
                             <div class="text-muted small">
@@ -143,15 +163,12 @@
                             </div>
 
                             <ul class="pagination mb-0">
-                                {{-- Previous --}}
                                 <li class="page-item {{ $places->onFirstPage() ? 'disabled' : '' }}">
-                                    <a class="page-link"
-                                       href="{{ $places->previousPageUrl() ?? '#' }}">
+                                    <a class="page-link" href="{{ $places->previousPageUrl() ?? '#' }}">
                                         Previous
                                     </a>
                                 </li>
 
-                                {{-- Pages --}}
                                 @for ($i = 1; $i <= $places->lastPage(); $i++)
                                     <li class="page-item {{ $places->currentPage() == $i ? 'active' : '' }}">
                                         <a class="page-link" href="{{ $places->url($i) }}">
@@ -160,10 +177,8 @@
                                     </li>
                                 @endfor
 
-                                {{-- Next --}}
                                 <li class="page-item {{ $places->hasMorePages() ? '' : 'disabled' }}">
-                                    <a class="page-link"
-                                       href="{{ $places->nextPageUrl() ?? '#' }}">
+                                    <a class="page-link" href="{{ $places->nextPageUrl() ?? '#' }}">
                                         Next
                                     </a>
                                 </li>

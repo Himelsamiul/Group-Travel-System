@@ -5,9 +5,9 @@
     <h3 class="mb-4">Registered Tourists</h3>
 
     <div class="card">
-        <div class="card-body">
-            <table class="table table-bordered table-hover">
-                <thead>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
                     <tr>
                         <th>SL</th>
                         <th>Name</th>
@@ -17,11 +17,16 @@
                         <th>Nationality</th>
                         <th>Address</th>
                         <th>NID/Passport</th>
-                        <th>Action</th>
+                        <th>Status</th>
+                        <th width="220">Action</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @forelse($tourists as $key => $tourist)
+                        @php
+                            $hasBooking = $tourist->tour_applications_count > 0;
+                        @endphp
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $tourist->name }}</td>
@@ -31,21 +36,54 @@
                             <td>{{ $tourist->nationality }}</td>
                             <td>{{ $tourist->address }}</td>
                             <td>{{ $tourist->nid_passport }}</td>
+
+                            {{-- STATUS --}}
                             <td>
-                                <form method="POST"
-                                      action="{{ route('tourists.delete', $tourist->id) }}"
-                                      onsubmit="return confirm('Are you sure?')">
+                                <span class="badge {{ $tourist->status == 'active' ? 'badge-success' : 'badge-secondary' }}">
+                                    {{ ucfirst($tourist->status) }}
+                                </span>
+                            </td>
+
+                            {{-- ACTION --}}
+                            <td>
+                                {{-- ACTIVATE / DEACTIVATE --}}
+                                <form action="{{ route('tourists.toggleStatus', $tourist->id) }}"
+                                      method="POST"
+                                      class="d-inline">
                                     @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm">
-                                        Delete
+                                    @method('PUT')
+                                    <button class="btn btn-sm {{ $tourist->status == 'active' ? 'btn-warning' : 'btn-success' }}">
+                                        {{ $tourist->status == 'active' ? 'Deactivate' : 'Activate' }}
                                     </button>
                                 </form>
+
+                                {{-- DELETE --}}
+                                @if($hasBooking)
+                                    <button class="btn btn-sm btn-danger" disabled>
+                                        Delete
+                                    </button>
+                                    <small class="text-danger d-block mt-1">
+                                        This tourist has bookings
+                                    </small>
+                                @else
+                                    <form method="POST"
+                                          action="{{ route('tourists.delete', $tourist->id) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Are you sure?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm">
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">No tourists found</td>
+                            <td colspan="10" class="text-center text-muted">
+                                No tourists found
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

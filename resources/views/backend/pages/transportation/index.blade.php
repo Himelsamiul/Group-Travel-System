@@ -33,14 +33,14 @@
                                 <option value="">Select Type</option>
                                 @foreach(['bus','car','air','launch','micro'] as $type)
                                     <option value="{{ $type }}"
-                                        {{ (isset($transport) && $transport->type == $type) ? 'selected' : '' }}>
+                                        {{ (isset($transport) && $transport->type==$type)?'selected':'' }}>
                                         {{ ucfirst($type) }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
 
-                        {{-- Transport Name --}}
+                        {{-- Name --}}
                         <div class="form-group mb-3">
                             <label>Transport Name <span class="text-danger">*</span></label>
                             <input type="text"
@@ -52,14 +52,14 @@
 
                         {{-- Status --}}
                         <div class="form-group mb-3">
-                            <label>Status <span class="text-danger">*</span></label>
+                            <label>Status</label>
                             <select name="status" class="form-control" required>
                                 <option value="active"
-                                    {{ (isset($transport) && $transport->status=='active') ? 'selected' : '' }}>
+                                    {{ (isset($transport) && $transport->status=='active')?'selected':'' }}>
                                     Active
                                 </option>
                                 <option value="inactive"
-                                    {{ (isset($transport) && $transport->status=='inactive') ? 'selected' : '' }}>
+                                    {{ (isset($transport) && $transport->status=='inactive')?'selected':'' }}>
                                     Inactive
                                 </option>
                             </select>
@@ -100,13 +100,13 @@
                         <table class="table table-bordered table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th width="40">SL</th>
+                                    <th>SL</th>
                                     <th>Type</th>
                                     <th>Name</th>
                                     <th>Note</th>
                                     <th>Status</th>
                                     <th>Date</th>
-                                    <th width="130">Action</th>
+                                    <th width="170">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -124,20 +124,31 @@
                                         <td>{{ $t->created_at->format('d M Y') }}</td>
                                         <td>
                                             <a href="{{ route('transportations.edit',$t->id) }}"
-                                               class="btn btn-sm btn-info">
+                                               class="btn btn-sm btn-info mb-1">
                                                 Edit
                                             </a>
 
-                                            <form action="{{ route('transportations.destroy',$t->id) }}"
-                                                  method="POST"
-                                                  class="d-inline"
-                                                  onsubmit="return confirm('Delete this transportation?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-danger">
+                                            @if($t->tour_packages_count > 0)
+                                                <button class="btn btn-sm btn-secondary mb-1"
+                                                        disabled
+                                                        title="This transportation is used in tour packages" style="background-color: #1c4198;">
                                                     Delete
                                                 </button>
-                                            </form>
+                                                <div class="text-danger small">
+                                                    Used in tour packages
+                                                </div>
+                                            @else
+                                                <form action="{{ route('transportations.destroy',$t->id) }}"
+                                                      method="POST"
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('Delete this transportation?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-sm btn-danger mb-1">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty
@@ -151,39 +162,38 @@
                         </table>
                     </div>
 
-                    {{-- ================= CUSTOM PAGINATION ================= --}}
+                    {{-- ================= PAGINATION ================= --}}
                     @if ($transportations->lastPage() > 1)
                         <nav class="d-flex justify-content-between align-items-center mt-3">
                             <div class="text-muted small">
-                                Showing {{ $transportations->firstItem() }} to {{ $transportations->lastItem() }}
+                                Showing {{ $transportations->firstItem() }}
+                                to {{ $transportations->lastItem() }}
                                 of {{ $transportations->total() }} results
                             </div>
 
                             <ul class="pagination mb-0">
-                                <li class="page-item {{ $transportations->onFirstPage() ? 'disabled' : '' }}">
-                                    <a class="page-link" href="{{ $transportations->previousPageUrl() ?? '#' }}">
+                                <li class="page-item {{ $transportations->onFirstPage()?'disabled':'' }}">
+                                    <a class="page-link" href="{{ $transportations->previousPageUrl() }}">
                                         Previous
                                     </a>
                                 </li>
 
-                                @for ($i = 1; $i <= $transportations->lastPage(); $i++)
-                                    <li class="page-item {{ $transportations->currentPage() == $i ? 'active' : '' }}">
+                                @for($i=1;$i<=$transportations->lastPage();$i++)
+                                    <li class="page-item {{ $transportations->currentPage()==$i?'active':'' }}">
                                         <a class="page-link" href="{{ $transportations->url($i) }}">
                                             {{ $i }}
                                         </a>
                                     </li>
                                 @endfor
 
-                                <li class="page-item {{ $transportations->hasMorePages() ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $transportations->nextPageUrl() ?? '#' }}">
+                                <li class="page-item {{ $transportations->hasMorePages()?'':'disabled' }}">
+                                    <a class="page-link" href="{{ $transportations->nextPageUrl() }}">
                                         Next
                                     </a>
                                 </li>
                             </ul>
                         </nav>
                     @endif
-                    {{-- ================= END PAGINATION ================= --}}
-
                 </div>
             </div>
         </div>

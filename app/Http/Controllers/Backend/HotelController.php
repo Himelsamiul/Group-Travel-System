@@ -8,20 +8,24 @@ use Illuminate\Http\Request;
 
 class HotelController extends Controller
 {
-    // Create + List
+
     public function index()
     {
-        $hotels = Hotel::latest()->paginate(10); // 10 per page
+        $hotels = Hotel::withCount('tourPackages')
+            ->latest()
+            ->paginate(10);
+
         return view('backend.pages.hotels.index', compact('hotels'));
     }
 
-    // Store
+
+   
     public function store(Request $request)
     {
         $request->validate([
-            'name'  => 'required',
-            'stars' => 'required|integer|min:1|max:5',
-            'status'=> 'required',
+            'name'   => 'required',
+            'stars'  => 'required|integer|min:1|max:5',
+            'status' => 'required',
         ]);
 
         Hotel::create($request->only('name','stars','note','status'));
@@ -30,22 +34,24 @@ class HotelController extends Controller
         return redirect()->back();
     }
 
-    // Edit (same page)
+
     public function edit($id)
     {
         $hotel  = Hotel::findOrFail($id);
-        $hotels = Hotel::latest()->paginate(10); // 10 per page
+        $hotels = Hotel::withCount('tourPackages')
+            ->latest()
+            ->paginate(10);
 
         return view('backend.pages.hotels.index', compact('hotel','hotels'));
     }
 
-    // Update
+
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'  => 'required',
-            'stars' => 'required|integer|min:1|max:5',
-            'status'=> 'required',
+            'name'   => 'required',
+            'stars'  => 'required|integer|min:1|max:5',
+            'status' => 'required',
         ]);
 
         $hotel = Hotel::findOrFail($id);
@@ -55,10 +61,20 @@ class HotelController extends Controller
         return redirect()->route('hotels.index');
     }
 
-    // Delete
+
     public function destroy($id)
     {
-        Hotel::findOrFail($id)->delete();
+        $hotel = Hotel::withCount('tourPackages')->findOrFail($id);
+
+        if ($hotel->tour_packages_count > 0) {
+            alert()->error(
+                'Action Blocked',
+                'This hotel is already used in tour packages!'
+            );
+            return redirect()->back();
+        }
+
+        $hotel->delete();
 
         alert()->success('Success', 'Hotel deleted successfully!');
         return redirect()->back();

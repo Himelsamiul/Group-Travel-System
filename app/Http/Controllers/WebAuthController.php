@@ -83,12 +83,27 @@ class WebAuthController extends Controller
 
         if ($checkValidation->fails()) {
             alert()->error('Error', 'Validation Failed!');
-            return redirect()->back()->withErrors($checkValidation)->withInput();
+            return redirect()->back()
+                ->withErrors($checkValidation)
+                ->withInput();
+        }
+
+        //  Check if tourist exists
+        $tourist = \App\Models\Tourist::where('email', $request->email)->first();
+
+        // ❌ Tourist exists but inactive
+        if ($tourist && $tourist->status !== 'active') {
+            alert()->error(
+                'Account Inactive',
+                'Your account is inactive. Please contact admin.'
+            );
+            return redirect()->back();
         }
 
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
 
+        // ✅ Login attempt
         if (Auth::guard('touristGuard')->attempt($credentials, $remember)) {
             alert()->success('Success', 'Login Successful!');
             return redirect()->route('home');
@@ -96,11 +111,13 @@ class WebAuthController extends Controller
             alert()->error('Error', 'Invalid Email or Password!');
             return redirect()->back();
         }
+
     } catch (Exception $e) {
         alert()->error('Error', 'Login Failed!');
         return redirect()->back();
     }
 }
+
 
 // Frontend: show profile
 
@@ -189,10 +206,13 @@ public function profile()
 
 
 
-    public function touristIndex()
+public function touristIndex()
 {
     try {
-        $tourists = Tourist::latest()->get();
+        $tourists = Tourist::withCount('tourApplications')
+                    ->latest()
+                    ->get();
+
         return view('backend.pages.tourists.index', compact('tourists'));
     } catch (Exception $e) {
         alert()->error('Error', 'Unable to load tourists!');
@@ -200,11 +220,18 @@ public function profile()
     }
 }
 
+
 // Backend: delete tourist
 public function touristDelete($id)
 {
     try {
-        $tourist = Tourist::findOrFail($id);
+        $tourist = Tourist::withCount('tourApplications')->findOrFail($id);
+
+        if ($tourist->tour_applications_count > 0) {
+            alert()->error('Error', 'This tourist has bookings. Delete not allowed!');
+            return back();
+        }
+
         $tourist->delete();
 
         alert()->success('Success', 'Tourist deleted successfully!');
@@ -214,4 +241,19 @@ public function touristDelete($id)
         return redirect()->back();
     }
 }
+public function toggleTouristStatus($id)
+{
+    $tourist = Tourist::findOrFail($id);
+
+    $tourist->status = $tourist->status === 'active'
+                        ? 'inactive'
+                        : 'active';
+
+    $tourist->save();
+
+    alert()->success('Success', 'Tourist status updated successfully!');
+    return back();
+}
+
+
 }

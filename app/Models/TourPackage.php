@@ -52,4 +52,12 @@ class TourPackage extends Model
     {
         return $this->belongsTo(\App\Models\Transportation::class);
     }
+
+    // App\Models\TourPackage.php
+
+public function tourApplications()
+{
+    return $this->hasMany(TourApplication::class);
+}
+
 }

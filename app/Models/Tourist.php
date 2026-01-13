@@ -15,4 +15,9 @@ class Tourist extends Authenticatable
     {
         return $this->hasMany(TourApplication::class);
     }
+
+    public function isActive()
+{
+    return $this->status === 'active';
+}
 }

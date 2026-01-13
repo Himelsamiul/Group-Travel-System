@@ -8,55 +8,92 @@ use Illuminate\Http\Request;
 
 class TransportationController extends Controller
 {
+    // ===============================
+    // Create + List
+    // ===============================
     public function index()
     {
-        $transportations = Transportation::latest()->paginate(1);
+        $transportations = Transportation::withCount('tourPackages')
+            ->latest()
+            ->paginate(10);
+
         return view('backend.pages.transportation.index', compact('transportations'));
     }
 
+    // ===============================
+    // Store
+    // ===============================
     public function store(Request $request)
     {
         $request->validate([
             'transport_name' => 'required|string|max:255',
-            'type' => 'required|in:bus,car,air,launch,micro',
-            'status' => 'required|in:active,inactive',
+            'type'           => 'required|in:bus,car,air,launch,micro',
+            'status'         => 'required|in:active,inactive',
         ]);
 
-        Transportation::create($request->all());
+        Transportation::create($request->only(
+            'transport_name','type','note','status'
+        ));
 
-        return back()->with('success','Transportation created successfully');
+        alert()->success('Success', 'Transportation created successfully!');
+        return redirect()->back();
     }
 
+    // ===============================
+    // Edit
+    // ===============================
     public function edit($id)
     {
         $transport = Transportation::findOrFail($id);
-        $transportations = Transportation::latest()->paginate(1);
 
-        return view('backend.pages.transportation.index',
-            compact('transport','transportations'));
+        $transportations = Transportation::withCount('tourPackages')
+            ->latest()
+            ->paginate(10);
+
+        return view('backend.pages.transportation.index', compact(
+            'transport','transportations'
+        ));
     }
 
+    // ===============================
+    // Update
+    // ===============================
     public function update(Request $request, $id)
     {
-        $transport = Transportation::findOrFail($id);
-
         $request->validate([
             'transport_name' => 'required',
-            'type' => 'required|in:bus,car,air,launch,micro',
-            'status' => 'required|in:active,inactive',
+            'type'           => 'required|in:bus,car,air,launch,micro',
+            'status'         => 'required|in:active,inactive',
         ]);
 
-        $transport->update($request->all());
+        $transport = Transportation::findOrFail($id);
+        $transport->update($request->only(
+            'transport_name','type','note','status'
+        ));
 
-        return redirect()->route('transportations.index')
-            ->with('success','Transportation updated successfully');
+        alert()->success('Success', 'Transportation updated successfully!');
+        return redirect()->route('transportations.index');
     }
 
+    // ===============================
+    // Delete (SAFE)
+    // ===============================
     public function destroy($id)
     {
-        Transportation::findOrFail($id)->delete();
+        $transport = Transportation::withCount('tourPackages')
+            ->findOrFail($id);
 
-        return back()->with('success','Transportation deleted successfully');
+        if ($transport->tour_packages_count > 0) {
+            alert()->error(
+                'Action Blocked',
+                'This transportation is already used in tour packages!'
+            );
+            return redirect()->back();
+        }
+
+        $transport->delete();
+
+        alert()->success('Success', 'Transportation deleted successfully!');
+        return redirect()->back();
     }
 }
-

@@ -31,14 +31,13 @@
                         <th>Discount Amount</th>
                         <th>Final Price</th>
 
-                        {{-- ✅ Seat Info --}}
                         <th>Total Seats</th>
                         <th>Booked</th>
                         <th>Available</th>
 
                         <th>Status</th>
                         <th>Created</th>
-                        <th width="160">Action</th>
+                        <th width="200">Action</th>
                     </tr>
                 </thead>
 
@@ -53,59 +52,50 @@
                                     ->diffInDays(\Carbon\Carbon::parse($p->end_date)) + 1;
                             $nights = $days - 1;
 
-                            // ✅ Seat calculation
                             $totalSeats = $p->max_persons;
                             $availableSeats = $p->available_seats;
                             $bookedSeats = $totalSeats - $availableSeats;
+
+                            // 🔐 booking check
+                            $hasBooking = $p->tour_applications_count > 0;
                         @endphp
 
                         <tr>
                             <td>{{ $packages->firstItem() + $key }}</td>
 
-                            {{-- Image --}}
                             <td>
                                 <img src="{{ asset('uploads/tour-packages/'.$p->thumbnail_image) }}"
                                      width="70"
                                      class="img-thumbnail">
                             </td>
 
-                            {{-- Title --}}
                             <td><strong>{{ $p->package_title }}</strong></td>
 
-                            {{-- Short Description --}}
                             <td>{{ $p->short_description }}</td>
 
-                            {{-- Place --}}
                             <td>{{ $p->place->name ?? '-' }}</td>
 
-                            {{-- Schedule --}}
                             <td>
                                 {{ \Carbon\Carbon::parse($p->start_date)->format('d M') }}
                                 →
                                 {{ \Carbon\Carbon::parse($p->end_date)->format('d M Y') }}
                             </td>
 
-                            {{-- Days --}}
                             <td>
                                 <span class="badge badge-primary">{{ $days }} D</span>
                                 <span class="badge badge-secondary">{{ $nights }} N</span>
                             </td>
 
-                            {{-- Price --}}
                             <td>৳{{ number_format($p->price_per_person) }}</td>
 
-                            {{-- Discount % --}}
                             <td>
                                 @if($discountPercent > 0)
-                                    <span class="badge badge-info">
-                                        {{ $discountPercent }}%
-                                    </span>
+                                    <span class="badge badge-info">{{ $discountPercent }}%</span>
                                 @else
                                     <span class="text-muted">—</span>
                                 @endif
                             </td>
 
-                            {{-- Discount Amount --}}
                             <td>
                                 @if($discountPercent > 0)
                                     <span class="text-danger">
@@ -116,49 +106,37 @@
                                 @endif
                             </td>
 
-                            {{-- Final Price --}}
                             <td>
                                 <strong class="text-success">
                                     ৳{{ number_format($finalPrice) }}
                                 </strong>
                             </td>
 
-                            {{-- ✅ Seat Info --}}
                             <td>
-                                <span class="badge badge-dark">
-                                    {{ $totalSeats }}
-                                </span>
+                                <span class="badge badge-dark">{{ $totalSeats }}</span>
                             </td>
 
                             <td>
-                                <span class="badge badge-warning">
-                                    {{ $bookedSeats }}
-                                </span>
+                                <span class="badge badge-warning">{{ $bookedSeats }}</span>
                             </td>
 
                             <td>
                                 @if($availableSeats > 0)
-                                    <span class="badge badge-success">
-                                        {{ $availableSeats }}
-                                    </span>
+                                    <span class="badge badge-success">{{ $availableSeats }}</span>
                                 @else
-                                    <span class="badge badge-danger">
-                                        Full
-                                    </span>
+                                    <span class="badge badge-danger">Full</span>
                                 @endif
                             </td>
 
-                            {{-- Status --}}
                             <td>
-                                <span class="badge {{ $p->status=='active' ? 'badge-success' : 'badge-secondary' }}">
+                                <span class="badge {{ $p->status == 'active' ? 'badge-success' : 'badge-secondary' }}">
                                     {{ ucfirst($p->status) }}
                                 </span>
                             </td>
 
-                            {{-- Created --}}
                             <td>{{ $p->created_at->format('d M Y') }}</td>
 
-                            {{-- Action --}}
+                            {{-- 🔐 ACTION --}}
                             <td>
                                 <a href="{{ route('tour-packages.show',$p->id) }}"
                                    class="btn btn-sm btn-secondary">
@@ -170,16 +148,26 @@
                                     Edit
                                 </a>
 
-                                <form action="{{ route('tour-packages.destroy',$p->id) }}"
-                                      method="POST"
-                                      class="d-inline"
-                                      onsubmit="return confirm('Delete this tour package?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
+                                {{-- DELETE LOCK --}}
+                                @if($hasBooking)
+                                    <button class="btn btn-sm btn-danger" disabled>
                                         Delete
                                     </button>
-                                </form>
+                                    <small class="text-danger d-block mt-1">
+                                        This package has been used by tourist
+                                    </small>
+                                @else
+                                    <form action="{{ route('tour-packages.destroy',$p->id) }}"
+                                          method="POST"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Delete this tour package?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty
@@ -192,7 +180,6 @@
                 </tbody>
             </table>
 
-            {{-- Pagination --}}
             <div class="mt-3">
                 {{ $packages->links() }}
             </div>

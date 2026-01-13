@@ -17,7 +17,10 @@ class TourPackageController extends Controller
     // ===============================
     public function index()
     {
-        $packages = TourPackage::latest()->paginate(10);
+            $packages = TourPackage::withCount('tourApplications')
+                ->latest()
+                ->paginate(10);
+
         return view('backend.pages.tour-packages.index', compact('packages'));
     }
 
