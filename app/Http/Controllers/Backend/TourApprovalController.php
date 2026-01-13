@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class TourApprovalController extends Controller
 {
-    /**
-     * Show all tour applications (pending / accepted / rejected)
-     */
+
     public function index()
     {
         $applications = TourApplication::with(['tourist', 'tourPackage'])
@@ -20,11 +18,7 @@ class TourApprovalController extends Controller
         return view('backend.pages.tour-list', compact('applications'));
     }
 
-    /**
-     * Approve a tour application
-     * - Only pending can be approved
-     * - Seat will decrease by 1
-     */
+
     public function approve($id)
     {
         DB::transaction(function () use ($id) {

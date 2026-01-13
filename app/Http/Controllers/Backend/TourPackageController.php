@@ -149,10 +149,10 @@ class TourPackageController extends Controller
 
     $package = TourPackage::findOrFail($id);
 
-    // 🔒 Calculate booked seats
+
     $bookedSeats = $package->max_persons - $package->available_seats;
 
-    // ❌ Prevent logical error
+ 
     if ($request->max_persons < $bookedSeats) {
         return back()
             ->withErrors([
@@ -162,7 +162,7 @@ class TourPackageController extends Controller
             ->withInput();
     }
 
-    // 🧮 Recalculate available seats safely
+  
     $newAvailableSeats = $request->max_persons - $bookedSeats;
 
     // 🖼 Image update

@@ -131,10 +131,7 @@ public function profile()
                 $finalAmount = $price - $discountAmt;
 
                 /*
-                |--------------------------------------------------------------------------
-                | FUTURE PAYMENT STRUCTURE (inactive now)
-                |--------------------------------------------------------------------------
-                | These will be linked with payments table later
+    r
                 */
                 $totalPaid = 0;              // future: sum(payments.amount)
                 $totalDue  = $finalAmount;   // future: finalAmount - totalPaid
