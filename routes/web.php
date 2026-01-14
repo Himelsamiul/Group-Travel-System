@@ -58,6 +58,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/admin/tour-approvals', [TourApprovalController::class, 'index'])->name('admin.tour.approvals');
         Route::post('/admin/tour-approvals/{id}/approve', [TourApprovalController::class, 'approve'])->name('admin.tour.approvals.approve');
         Route::post('/admin/tour-payment/{id}/complete', [TourApprovalController::class, 'complete_payment'])->name('admin.tour.payment.complete');
+        Route::post('/admin/tour-accept-cancel-request/{id}', [TourApprovalController::class, 'acceptRequest'])->name('admin.tour.accept.cancel.request');
         Route::post('/admin/tour-approvals/{id}/reject', [TourApprovalController::class, 'reject'])->name('admin.tour.approvals.reject');
             // Reports page
         Route::get('/admin/reports', [TourApprovalController::class, 'report'])->name('admin.reports');
@@ -92,5 +93,6 @@ Route::group(['middleware' => 'touristAuth'], function () {
     Route::post('/tour/{package}/apply', [TourApplicationController::class, 'apply'])->name('tour.apply');
     Route::get('/tour/{package}/apply', [TourApplicationController::class, 'showApplyForm'])->name('tour.apply.form');
     Route::get('/tour/payment/{id}', [PaymentController::class, 'start'])->name('tour.payment.start');
+    Route::get('/tour/cancel/{id}', [WebAuthController::class, 'cancel'])->name('tour.booking.cancel');
 });
 Route::get('/tour/payment/callback', [PaymentController::class, 'callback'])->name('tour.payment.callback');

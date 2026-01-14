@@ -50,6 +50,31 @@ class TourApprovalController extends Controller
         return back()->with('success', 'Application approved and seat updated.');
     }
 
+    public function acceptRequest($id)
+    {
+        DB::transaction(function () use ($id) {
+
+            $application = TourApplication::with('tourPackage')->findOrFail($id);
+
+            // Only pending allowed
+            if ($application->status !== 'cancel requested') {
+                return;
+            }
+            
+            // Update application status
+            $application->status = 'cancel request accept';
+            $application->save();
+            
+            $total_persons = $application-> total_persons;
+            
+            $application->tourPackage->available_seats += (int) $total_persons;
+            $application->tourPackage->booked -= (int) $total_persons;
+            $application->tourPackage->save();
+        });
+
+        return back()->with('success', 'Application approved and seat updated.');
+    }
+
     public function complete_payment($id)
     {
         DB::transaction(function () use ($id) {

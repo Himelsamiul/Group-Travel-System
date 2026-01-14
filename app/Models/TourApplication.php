@@ -22,6 +22,7 @@ class TourApplication extends Model
         'payment_status',
         'final_amount',
         'dues',
+        'total_persons',
     ];
 
     /*

@@ -54,7 +54,7 @@
 
                             $totalSeats = $p->max_persons;
                             $availableSeats = $p->available_seats;
-                            $bookedSeats = $totalSeats - $availableSeats;
+                            $bookedSeats = $p->booked;
 
                             // 🔐 booking check
                             $hasBooking = $p->tour_applications_count > 0;

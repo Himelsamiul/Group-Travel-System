@@ -66,7 +66,7 @@ class TourPackageController extends Controller
             'included_items'      => 'required|string',
             'excluded_items'      => 'nullable|string',
 
-            'thumbnail_image'     => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'thumbnail_image'     => 'required|image|mimes:jpg,jpeg,png,webp',
 
             'status'              => 'required|in:active,inactive',
         ]);

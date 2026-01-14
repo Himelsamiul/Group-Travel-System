@@ -33,19 +33,6 @@ public function show($id)
         ->findOrFail($id);
 
     $canApply = true;
-
-    
-    if (auth()->guard('touristGuard')->check()) {
-        $exists = TourApplication::where('tourist_id', auth()->guard('touristGuard')->id())
-            ->where('tour_package_id', $package->id)
-            ->whereIn('status', ['pending','accepted'])
-            ->exists();
-
-        if ($exists) {
-            $canApply = false;
-        }
-    }
-
   
     if ($package->available_seats <= 0) {
         $canApply = false;

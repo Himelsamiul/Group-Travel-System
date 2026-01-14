@@ -38,9 +38,11 @@
 
                         {{-- Tour Info --}}
                         <th>Tour Package</th>
+                        <th>Price Per Person</th>
+                        <th>Total Person</th>
 
                         {{-- Pricing --}}
-                        <th>Amount</th>
+                        <th>Total Amount</th>
                         <th>Dues</th>
 
                         {{-- Status --}}
@@ -84,6 +86,8 @@
 
                             {{-- Tour --}}
                             <td>{{ $app->tourPackage->package_title ?? '-' }}</td>
+                            <td>{{ $app->tourPackage->price_per_person }}</td>
+                            <td>{{ $app->total_persons }}</td>
 
                             <td>
                                 <strong class="text-success">
@@ -102,6 +106,12 @@
                                     <span class="badge bg-warning">Pending</span>
                                 @elseif($app->status === 'accepted')
                                     <span class="badge bg-success">Accepted</span>
+                                @elseif($app->status === 'booked')
+                                    <span class="badge bg-success">Booked</span>
+                                @elseif($app->status === 'cancel requested')
+                                    <span class="badge bg-success">Cancel Requested</span>
+                                @elseif($app->status === 'cancel request accept')
+                                    <span class="badge bg-success">Cancel Request Accept</span>
                                 @else
                                     <span class="badge bg-danger">Rejected</span>
                                 @endif
@@ -114,46 +124,23 @@
 
                             {{-- Action --}}
                             <td>
-                                @php
-                                    $created = $app->created_at;
-                                    $showrejectButtons = $app->status === 'accepted' && $app->payment_status === 'Pending'
-                                                        && $created->diffInHours(now()) > 24;
-                                @endphp
-                                @if($showrejectButtons)
-                                    <form action="{{ route('admin.tour.approvals.reject', $app->id) }}"
-                                          method="POST" style="display:inline;">
-                                        @csrf
-                                        <button class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Reject this application?')">
-                                            Reject
-                                        </button>
-                                    </form>
-                                @endif
-                                @if($app->status === 'pending')
-                                    <form action="{{ route('admin.tour.approvals.approve', $app->id) }}"
-                                          method="POST" style="display:inline;">
-                                        @csrf
-                                        <button class="btn btn-sm btn-success"
-                                            onclick="return confirm('Approve this application?')">
-                                            Approve
-                                        </button>
-                                    </form>
-
-                                    <form action="{{ route('admin.tour.approvals.reject', $app->id) }}"
-                                          method="POST" style="display:inline;">
-                                        @csrf
-                                        <button class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Reject this application?')">
-                                            Reject
-                                        </button>
-                                    </form>
-                                @elseif($app->payment_status === 'Partial Paid')
+                                @if($app->payment_status === 'Partial Paid' && $app->status != 'cancel request accept')
                                     <form action="{{ route('admin.tour.payment.complete', $app->id) }}"
                                           method="POST" style="display:inline;">
                                         @csrf
                                         <button class="btn btn-sm btn-success"
-                                            onclick="return confirm('Complete this Payment For this Booking?')">
+                                            onclick="return confirm('Accept this cancellation request?')">
                                             Complete Payment
+                                        </button>
+                                    </form>
+                                @endif
+                                @if($app->status === 'cancel requested')
+                                    <form action="{{ route('admin.tour.accept.cancel.request', $app->id) }}"
+                                          method="POST" style="display:inline;">
+                                        @csrf
+                                        <button class="btn btn-sm btn-success"
+                                            onclick="return confirm('Complete this Payment For this Booking?')">
+                                            Accept Cancel Request
                                         </button>
                                     </form>
                                 @endif

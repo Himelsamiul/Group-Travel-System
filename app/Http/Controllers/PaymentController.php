@@ -46,6 +46,7 @@ class PaymentController extends Controller
         // $application->save();
         $application->dues = $application->final_amount - $amount;
         $application->payment_status = "Partial Paid";
+        $application->status = "booked";
         $application->save();
 
         return redirect($session->url);
@@ -73,7 +74,8 @@ class PaymentController extends Controller
         $application = TourApplication::find($application_id);
         if ($application) {
             $application->payment_status = 'Partial Paid';
-            $application->dues = $application->final_amount - ($session->amount_total / 100); // Stripe amount in BDT
+            $application->status = 'booked';
+            $application->dues = $application->final_amount - ($session->amount_total / 100); 
             $application->save();
         }
 

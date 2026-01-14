@@ -28,14 +28,14 @@ class WebAuthController extends Controller
         try {
             $checkValidation = Validator::make($request->all(), [
                 'name' => 'required|string|max:100',
-'email' => 'required|email|unique:tourists,email',
-'password' => 'required|string|min:6',
-'phone' => 'required|regex:/^01[3-9][0-9]{8}$/',
-'address' => 'required|string|max:255',
-'gender' => 'required|in:male,female,other',
-'date_of_birth' => 'required|date|before:today',
-'nationality' => 'required|string|max:100',
-'nid_passport' => 'required|string|max:16',
+                'email' => 'required|email|unique:tourists,email',
+                'password' => 'required|string|min:6',
+                'phone' => 'required|regex:/^01[3-9][0-9]{8}$/',
+                'address' => 'required|string|max:255',
+                'gender' => 'required|in:male,female,other',
+                'date_of_birth' => 'required|date|before:today',
+                'nationality' => 'required|string|max:100',
+                'nid_passport' => 'required|string|max:16',
 
             ]);
 
@@ -75,120 +75,120 @@ class WebAuthController extends Controller
     }
 
     public function doLogin(Request $request)
-{
-    try {
-        $checkValidation = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+    {
+        try {
+            $checkValidation = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
 
-        if ($checkValidation->fails()) {
-            alert()->error('Error', 'Validation Failed!');
-            return redirect()->back()
-                ->withErrors($checkValidation)
-                ->withInput();
-        }
+            if ($checkValidation->fails()) {
+                alert()->error('Error', 'Validation Failed!');
+                return redirect()->back()
+                    ->withErrors($checkValidation)
+                    ->withInput();
+            }
 
-        //  Check if tourist exists
-        $tourist = \App\Models\Tourist::where('email', $request->email)->first();
+            //  Check if tourist exists
+            $tourist = \App\Models\Tourist::where('email', $request->email)->first();
 
-        // ❌ Tourist exists but inactive
-        if ($tourist && $tourist->status !== 'active') {
-            alert()->error(
-                'Account Inactive',
-                'Your account is inactive. Please contact admin.'
-            );
+            // ❌ Tourist exists but inactive
+            if ($tourist && $tourist->status !== 'active') {
+                alert()->error(
+                    'Account Inactive',
+                    'Your account is inactive. Please contact admin.'
+                );
+                return redirect()->back();
+            }
+
+            $credentials = $request->only('email', 'password');
+            $remember = $request->has('remember');
+
+            // ✅ Login attempt
+            if (Auth::guard('touristGuard')->attempt($credentials, $remember)) {
+                alert()->success('Success', 'Login Successful!');
+                return redirect()->route('home');
+            } else {
+                alert()->error('Error', 'Invalid Email or Password!');
+                return redirect()->back();
+            }
+        } catch (Exception $e) {
+            alert()->error('Error', 'Login Failed!');
             return redirect()->back();
         }
-
-        $credentials = $request->only('email', 'password');
-        $remember = $request->has('remember');
-
-        // ✅ Login attempt
-        if (Auth::guard('touristGuard')->attempt($credentials, $remember)) {
-            alert()->success('Success', 'Login Successful!');
-            return redirect()->route('home');
-        } else {
-            alert()->error('Error', 'Invalid Email or Password!');
-            return redirect()->back();
-        }
-
-    } catch (Exception $e) {
-        alert()->error('Error', 'Login Failed!');
-        return redirect()->back();
     }
-}
 
 
-// Frontend: show profile
+    // Frontend: show profile
 
-public function profile()
-{
-    try {
-        $tourist = Auth::guard('touristGuard')->user();
+    public function profile()
+    {
+        try {
+            $tourist = Auth::guard('touristGuard')->user();
 
-        // ===============================
-        // Tour Application History
-        // ===============================
-        $applications = TourApplication::with([
+            // ===============================
+            // Tour Application History
+            // ===============================
+            $applications = TourApplication::with([
                 'tourPackage.place'
             ])
-            ->where('tourist_id', $tourist->id)
-            ->latest()
-            ->get()
-            ->map(function ($app) use ($tourist) {
+                ->where('tourist_id', $tourist->id)
+                ->latest()
+                ->get()
+                ->map(function ($app) use ($tourist) {
 
-                // Base price
-                $price = $app->tourPackage->price_per_person ?? 0;
+                    // Base price
+                    $price = $app->tourPackage->price_per_person ?? 0;
 
-                // Discount
-                $discountPct = $app->tourPackage->discount ?? 0;
-                $discountAmt = ($price * $discountPct) / 100;
+                    // Discount
+                    $discountPct = $app->tourPackage->discount ?? 0;
+                    $discountAmt = ($price * $discountPct) / 100;
 
-                // Final payable
-                $finalAmount = $price - $discountAmt;
+                    // Final payable
+                    $finalAmount = $price - $discountAmt;
 
-                /*
+                    /*
     r
                 */
-                $totalPaid = 0;              // future: sum(payments.amount)
-                $totalDue  = $finalAmount;   // future: finalAmount - totalPaid
+                    $totalPaid = 0;              // future: sum(payments.amount)
+                    $totalDue  = $finalAmount;   // future: finalAmount - totalPaid
 
-                return [
-                    // Tourist
-                    'application_id' => $app->id,
-                    'name'           => $tourist->name,
+                    return [
+                        // Tourist
+                        'application_id' => $app->id,
+                        'name'           => $tourist->name,
 
-                    // Tour info
-                    'place_name'     => $app->tourPackage->place->name ?? '-',
-                    'package_name'   => $app->tourPackage->package_title ?? '-',
+                        // Tour info
+                        'place_name'     => $app->tourPackage->place->name ?? '-',
+                        'tour_date'     => $app->tourPackage->start_date ?? '-',
+                        'package_name'   => $app->tourPackage->package_title ?? '-',
 
-                    // Pricing
-                    'price'          => $price,
-                    'discount_pct'   => $discountPct,
-                    'discount_amt'   => $discountAmt,
-                    'final_amount'   => $app->final_amount,
+                        // Pricing
+                        'price'          => $price,
+                        'total_persons'  => $app->total_persons,
+                        'discount_pct'   => $discountPct,
+                        'discount_amt'   => $discountAmt,
+                        'final_amount'   => $app->final_amount,
 
-                    'total_due'      => $app->dues,
+                        'total_due'      => $app->dues,
 
-                    // Status & date
-                    'status'         => $app->status,
-                    'payment_status'         => $app->payment_status,
-                    'applied_at'     => $app->created_at,
-                ];
-            });
+                        // Status & date
+                        'status'         => $app->status,
+                        'payment_status'         => $app->payment_status,
+                        'applied_at'     => $app->created_at,
+                    ];
+                });
 
-        return view(
-            'frontend.pages.profile',
-            compact('tourist', 'applications')
-        );
-
-    } catch (\Exception $e) {
-        alert()->error('Error', 'Unable to load profile!');
-        return redirect()->back();
+            return view(
+                'frontend.pages.profile',
+                compact('tourist', 'applications')
+            );
+        } catch (\Exception $e) {
+            alert()->error('Error', 'Unable to load profile!');
+            return redirect()->back();
+        }
     }
-}
-// Frontend: logout tourist
+    // Frontend: logout tourist
     public function logout()
     {
         try {
@@ -207,54 +207,62 @@ public function profile()
 
 
 
-public function touristIndex()
-{
-    try {
-        $tourists = Tourist::withCount('tourApplications')
-                    ->latest()
-                    ->get();
+    public function touristIndex()
+    {
+        try {
+            $tourists = Tourist::withCount('tourApplications')
+                ->latest()
+                ->get();
 
-        return view('backend.pages.tourists.index', compact('tourists'));
-    } catch (Exception $e) {
-        alert()->error('Error', 'Unable to load tourists!');
-        return redirect()->back();
-    }
-}
-
-
-// Backend: delete tourist
-public function touristDelete($id)
-{
-    try {
-        $tourist = Tourist::withCount('tourApplications')->findOrFail($id);
-
-        if ($tourist->tour_applications_count > 0) {
-            alert()->error('Error', 'This tourist has bookings. Delete not allowed!');
-            return back();
+            return view('backend.pages.tourists.index', compact('tourists'));
+        } catch (Exception $e) {
+            alert()->error('Error', 'Unable to load tourists!');
+            return redirect()->back();
         }
-
-        $tourist->delete();
-
-        alert()->success('Success', 'Tourist deleted successfully!');
-        return redirect()->back();
-    } catch (Exception $e) {
-        alert()->error('Error', 'Delete failed!');
-        return redirect()->back();
     }
-}
-public function toggleTouristStatus($id)
-{
-    $tourist = Tourist::findOrFail($id);
-
-    $tourist->status = $tourist->status === 'active'
-                        ? 'inactive'
-                        : 'active';
-
-    $tourist->save();
-
-    alert()->success('Success', 'Tourist status updated successfully!');
-    return back();
-}
 
 
+    // Backend: delete tourist
+    public function touristDelete($id)
+    {
+        try {
+            $tourist = Tourist::withCount('tourApplications')->findOrFail($id);
+
+            if ($tourist->tour_applications_count > 0) {
+                alert()->error('Error', 'This tourist has bookings. Delete not allowed!');
+                return back();
+            }
+
+            $tourist->delete();
+
+            alert()->success('Success', 'Tourist deleted successfully!');
+            return redirect()->back();
+        } catch (Exception $e) {
+            alert()->error('Error', 'Delete failed!');
+            return redirect()->back();
+        }
+    }
+    public function toggleTouristStatus($id)
+    {
+        $tourist = Tourist::findOrFail($id);
+
+        $tourist->status = $tourist->status === 'active'
+            ? 'inactive'
+            : 'active';
+
+        $tourist->save();
+
+        alert()->success('Success', 'Tourist status updated successfully!');
+        return back();
+    }
+
+    public function cancel($id)
+    {
+        $application = TourApplication::findOrFail($id);
+
+        $application->status = 'cancel requested';
+        $application->save();
+
+        return back()->with('success', 'Application Request For Cancel.');
+    }
 }

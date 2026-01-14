@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('emergency_contact');
             $table->integer('final_amount');
+            $table->integer('total_persons');
             $table->integer('dues');
 
             // Optional fields
@@ -28,7 +29,7 @@ return new class extends Migration
             $table->text('special_note')->nullable();
 
             // Status
-            $table->enum('status', ['pending', 'accepted', 'rejected'])
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'booked', 'cancel requested', 'cancel request accept'])
                   ->default('pending');
 
             $table->string('payment_status');
