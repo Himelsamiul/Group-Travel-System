@@ -27,15 +27,16 @@ class WebAuthController extends Controller
     {
         try {
             $checkValidation = Validator::make($request->all(), [
-                'name' => 'required',
-                'email' => 'required|email|unique:tourists,email',
-                'password' => 'required|min:6',
-                'phone' => 'required|max:11',
-                'address' => 'required',
-                'gender' => 'required|in:male,female,other',
-                'date_of_birth' => 'required|date',
-                'nationality' => 'required',
-                'nid_passport' => 'required',
+                'name' => 'required|string|max:100',
+'email' => 'required|email|unique:tourists,email',
+'password' => 'required|string|min:6',
+'phone' => 'required|regex:/^01[3-9][0-9]{8}$/',
+'address' => 'required|string|max:255',
+'gender' => 'required|in:male,female,other',
+'date_of_birth' => 'required|date|before:today',
+'nationality' => 'required|string|max:100',
+'nid_passport' => 'required|string|max:16',
+
             ]);
 
             if ($checkValidation->fails()) {

@@ -34,7 +34,7 @@ public function show($id)
 
     $canApply = true;
 
-    // logged-in tourist হলে check করবে
+    
     if (auth()->guard('touristGuard')->check()) {
         $exists = TourApplication::where('tourist_id', auth()->guard('touristGuard')->id())
             ->where('tour_package_id', $package->id)
@@ -46,7 +46,7 @@ public function show($id)
         }
     }
 
-    // seat full হলে apply যাবে না
+  
     if ($package->available_seats <= 0) {
         $canApply = false;
     }

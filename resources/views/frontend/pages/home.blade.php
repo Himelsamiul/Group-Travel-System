@@ -120,79 +120,34 @@
 
 
 
-	<div class="untree_co-section">
-		<div class="container">
-			<div class="row text-center justify-content-center mb-5">
-				<div class="col-lg-7"><h2 class="section-title text-center">Popular Destination</h2></div>
-			</div>
+<div class="untree_co-section py-5">
+    <div class="container">
 
-			<div class="owl-carousel owl-3-slider">
+        <div class="owl-carousel owl-3-slider">
 
-				<div class="item">
-					<a class="media-thumb" href="{{url('frontend/images/hero-slider-1.jpg')}}" data-fancybox="gallery">
-						<div class="media-text">
-							<h3>Pragser Wildsee</h3>
-							<span class="location">Italy</span>
-						</div>
-						<img src="{{url('frontend/images/hero-slider-1.jpg')}}" alt="Image" class="img-fluid">
-					</a> 
-				</div>
+            @foreach($packages as $package)
+                <div class="media-1">
+                    <img 
+                        src="{{ asset('uploads/tour-packages/'.$package->thumbnail_image) }}" 
+                        alt="{{ $package->place->name }}"
+                        class="img-fluid"
+                    >
 
-				<div class="item">
-					<a class="media-thumb" href="{{url('frontend/images/hero-slider-2.jpg')}}" data-fancybox="gallery">
-						<div class="media-text">
-							<h3>Oia</h3>
-							<span class="location">Greece</span>
-						</div>
-						<img src="{{url('frontend/images/hero-slider-2.jpg')}}" alt="Image" class="img-fluid">
-					</a> 
-				</div>
+                    <div class="media-1-content">
+                        <h2>{{ $package->place->name }}</h2>
+                        <span class="category">
+                            {{ $package->place->country }}
+                        </span>
+                    </div>
+                </div>
+            @endforeach
 
-				<div class="item">
-					<a class="media-thumb" href="{{url('frontend/images/hero-slider-3.jpg')}}" data-fancybox="gallery">
-						<div class="media-text">
-							<h3>Perhentian Islands</h3>
-							<span class="location">Malaysia</span>
-						</div>
-						<img src="{{url('frontend/images/hero-slider-3.jpg')}}" alt="Image" class="img-fluid">
-					</a> 
-				</div>
+        </div>
+
+    </div>
+</div>
 
 
-				<div class="item">
-					<a class="media-thumb" href="{{url('frontend/images/hero-slider-4.jpg')}}" data-fancybox="gallery">
-						<div class="media-text">
-							<h3>Rialto Bridge</h3>
-							<span class="location">Italy</span>
-						</div>
-						<img src="{{url('frontend/images/hero-slider-4.jpg')}}" alt="Image" class="img-fluid">
-					</a> 
-				</div>
-
-				<div class="item">
-					<a class="media-thumb" href="{{url('frontend/images/hero-slider-5.jpg')}}" data-fancybox="gallery">
-						<div class="media-text">
-							<h3>San Francisco, United States</h3>
-							<span class="location">United States</span>
-						</div>
-						<img src="{{url('frontend/images/hero-slider-5.jpg')}}" alt="Image" class="img-fluid">
-					</a> 
-				</div>
-
-				<div class="item">
-					<a class="media-thumb" href="{{url('frontend/images/hero-slider-1.jpg')}}" data-fancybox="gallery">
-						<div class="media-text">
-							<h3>Lake Thun</h3>
-							<span class="location">Switzerland</span>
-						</div>
-						<img src="{{url('frontend/images/hero-slider-2.jpg')}}" alt="Image" class="img-fluid">
-					</a> 
-				</div>
-
-			</div>
-
-		</div>
-	</div>
 
 
 	<div class="untree_co-section testimonial-section mt-5">
@@ -204,9 +159,9 @@
 					<div class="owl-single owl-carousel no-nav">
 						<div class="testimonial mx-auto">
 							<figure class="img-wrap">
-								<img src="{{url('frontend/images/person_2.jpg')}}" alt="Image" class="img-fluid">
+								<img src="p.jpg" alt="Image" class="img-fluid">
 							</figure>
-							<h3 class="name">Adam Aderson</h3>
+							<h3 class="name">Afia Jahin</h3>
 							<blockquote>
 								<p>&ldquo;There live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
 							</blockquote>
@@ -214,9 +169,9 @@
 
 						<div class="testimonial mx-auto">
 							<figure class="img-wrap">
-								<img src="{{url('frontend/images/person_3.jpg')}}" alt="Image" class="img-fluid">
+								<img src="p.jpg" alt="Image" class="img-fluid">
 							</figure>
-							<h3 class="name">Lukas Devlin</h3>
+							<h3 class="name">Afia Jahin</h3>
 							<blockquote>
 								<p>&ldquo;There live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
 							</blockquote>
@@ -224,9 +179,9 @@
 
 						<div class="testimonial mx-auto">
 							<figure class="img-wrap">
-								<img src="{{url('frontend/images/person_4.jpg')}}" alt="Image" class="img-fluid">
+								<img src="p.jpg" alt="Image" class="img-fluid">
 							</figure>
-							<h3 class="name">Kayla Bryant</h3>
+							<h3 class="name">Afia Jahin</h3>
 							<blockquote>
 								<p>&ldquo;There live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
 							</blockquote>
@@ -240,97 +195,67 @@
 	</div>
 
 
-	<div class="untree_co-section">
-		<div class="container">
-			<div class="row justify-content-center text-center mb-5">
-				<div class="col-lg-6">
-					<h2 class="section-title text-center mb-3">Special Offers &amp; Discounts</h2>
-					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-					<div class="media-1">
-						<a href="#" class="d-block mb-3"><img src="{{url('frontend/images/hero-slider-1.jpg')}}" alt="Image" class="img-fluid"></a>
-						<span class="d-flex align-items-center loc mb-2">
-							<span class="icon-room mr-3"></span>
-							<span>Italy</span>
-						</span>
-						<div class="d-flex align-items-center">
-							<div>
-								<h3><a href="#">Rialto Mountains</a></h3>
-								<div class="price ml-auto">
-									<span>$520.00</span>
-								</div>
-							</div>
-							
-						</div>
-						
-					</div>
-				</div>
-				<div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-					<div class="media-1">
-						<a href="#" class="d-block mb-3"><img src="{{url('frontend/images/hero-slider-2.jpg')}}" alt="Image" class="img-fluid"></a>
-						<span class="d-flex align-items-center loc mb-2">
-							<span class="icon-room mr-3"></span>
-							<span>United States</span>
-						</span>
-						<div class="d-flex align-items-center">
-							<div>
-								<h3><a href="#">San Francisco</a></h3>
-								<div class="price ml-auto">
-									<span>$520.00</span>
-								</div>
-							</div>
-							
-						</div>
-						
-					</div>
-				</div>
-				<div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-					<div class="media-1">
-						<a href="#" class="d-block mb-3"><img src="{{url('frontend/images/hero-slider-3.jpg')}}" alt="Image" class="img-fluid"></a>
-						<span class="d-flex align-items-center loc mb-2">
-							<span class="icon-room mr-3"></span>
-							<span>Malaysia</span>
-						</span>
-						<div class="d-flex align-items-center">
-							<div>
-								<h3><a href="#">Perhentian Islands</a></h3>
-								<div class="price ml-auto">
-									<span>$750.00</span>
-								</div>
-							</div>
-							
-						</div>
-						
-					</div>
-				</div>
-				<div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-					<div class="media-1">
-						<a href="#" class="d-block mb-3"><img src="{{url('frontend/images/hero-slider-4.jpg')}}" alt="Image" class="img-fluid"></a>
+<div class="untree_co-section">
+    <div class="container">
 
-						<span class="d-flex align-items-center loc mb-2">
-							<span class="icon-room mr-3"></span>
-							<span>Switzerland</span>
-						</span>
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-6">
+                <h2 class="section-title text-center mb-3">
+                    Special Offers &amp; Discounts
+                </h2>
+                <p>
+                    Explore our best tour packages with exciting discounts.
+                </p>
+            </div>
+        </div>
 
-						<div class="d-flex align-items-center">
-							<div>
-								<h3><a href="#">Lake Thun</a></h3>
-								<div class="price ml-auto">
-									<span>$520.00</span>
-								</div>
-							</div>
-							
-						</div>
-						
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        {{-- ✅ SLIDER --}}
+        <div class="owl-carousel owl-4-slider">
 
+            @foreach($packages->take(6) as $package)
+                @php
+                    $discount = $package->discount ?? 0;
+                    $finalPrice = $package->price_per_person -
+                        ($package->price_per_person * $discount / 100);
+                @endphp
+
+                <div class="media-1">
+
+                    <a href="#" class="d-block mb-3">
+                        <img 
+                            src="{{ asset('uploads/tour-packages/'.$package->thumbnail_image) }}" 
+                            alt="{{ $package->package_title }}" 
+                            class="img-fluid"
+                        >
+                    </a>
+
+                    <span class="d-flex align-items-center loc mb-2">
+                        <span class="icon-room mr-3"></span>
+                        <span>{{ $package->place->country }}</span>
+                    </span>
+
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h3>
+                                <a href="#">
+                                    {{ $package->package_title }}
+                                </a>
+                            </h3>
+                            <div class="price ml-auto">
+                                <span>৳{{ number_format($finalPrice) }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            @endforeach
+
+        </div>
+
+    </div>
+</div>
+
+{{--
 	<div class="untree_co-section">
 		<div class="container">
 			<div class="row justify-content-between align-items-center">
@@ -371,14 +296,15 @@
 		</div>
 	</div>
 
-	
+	--}}
 	
 	<div class="py-5 cta-section">
 		<div class="container">
 			<div class="row text-center">
 				<div class="col-md-12">
 					<h2 class="mb-2 text-white">Lets you Explore the Best. Contact Us Now</h2>
-					<p class="mb-4 lead text-white text-white-opacity">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, fugit?</p>
+					<p class="mb-4 lead text-white text-white-opacity">Discover unforgettable destinations, carefully crafted tour packages, and
+    seamless travel experiences designed just for you.</p>
 					<p class="mb-0"><a href="booking.html" class="btn btn-outline-white text-white btn-md font-weight-bold">Get in touch</a></p>
 				</div>
 			</div>

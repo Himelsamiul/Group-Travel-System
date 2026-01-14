@@ -66,10 +66,10 @@ class TourApplicationController extends Controller
 
         // ✅ Validation
         $request->validate([
-            'phone'             => 'required',
-            'present_address'   => 'required',
-            'city'              => 'required',
-            'emergency_contact' => 'required',
+            'phone' => 'required|regex:/^01[3-9][0-9]{8}$/',
+'present_address' => 'required|string|min:5|max:255',
+'city' => 'required|string|max:100',
+'emergency_contact' => 'required|regex:/^01[3-9][0-9]{8}$/',
         ]);
 
         $amount = $package->price_per_person;

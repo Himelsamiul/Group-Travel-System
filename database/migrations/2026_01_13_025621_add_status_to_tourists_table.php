@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::table('tourists', function (Blueprint $table) {
         $table->enum('status', ['active', 'inactive'])
               ->default('active')
-              ->after('password'); // চাইলে position বদলাতে পারো
+              ->after('password');
     });
 }
 

@@ -44,9 +44,9 @@
 						<div class="widget">
 							<h3 class="heading">Contact</h3>
 							<ul class="list-unstyled quick-info links">
-								<li class="email"><a href="#">mail@example.com</a></li>
-								<li class="phone"><a href="#">+1 222 212 3819</a></li>
-								<li class="address"><a href="#">43 Raymouth Rd. Baltemoer, London 3910</a></li>
+								<li class="email"><a href="#">Afia Jahin</a></li>
+								<li class="phone"><a href="#">01787362195</a></li>
+								<li class="address"><a href="#">Road 12; sector 10,Uttara Dhaka.</a></li>
 							</ul>
 						</div>
 					</div>
