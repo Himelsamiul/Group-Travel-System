@@ -84,7 +84,6 @@ class TourPackageController extends Controller
         $package->full_description   = $request->full_description;
         $package->place_id           = $request->place_id;
         $package->start_date         = $request->start_date;
-        $package->booked             = 0;
         $package->end_date           = $request->end_date;
         $package->max_persons        = $request->max_persons;
         $package->min_persons        = $request->min_persons;
