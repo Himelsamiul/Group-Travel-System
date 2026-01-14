@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TourPackage;
 use App\Models\TourApplication;
+use Illuminate\Support\Facades\DB;
 
 class TourApplicationController extends Controller
 {
@@ -28,36 +29,51 @@ class TourApplicationController extends Controller
     // ===============================
     // Submit Apply Form
     // ===============================
-    public function apply(Request $request, TourPackage $package)
-    {
-        $tourist = auth()->guard('touristGuard')->user();
 
-        // ❌ Seat full safety
-        if ($package->available_seats <= 0) {
-            return redirect()
-                ->route('tour.packages.show', $package->id)
-                ->with('error', 'Seats are full for this tour.');
+public function apply(Request $request, TourPackage $package)
+{
+    $tourist = auth()->guard('touristGuard')->user();
+
+    // ===============================
+    // VALIDATION
+    // ===============================
+    $request->validate([
+        'phone'             => 'required|regex:/^01[3-9][0-9]{8}$/',
+        'present_address'   => 'required|string|min:5|max:255',
+        'city'              => 'required|string|max:100',
+        'emergency_contact' => 'required|regex:/^01[3-9][0-9]{8}$/',
+        'total_persons'     => 'required|integer|min:1',
+    ]);
+
+    // ===============================
+    // TRANSACTION START
+    // ===============================
+    return DB::transaction(function () use ($request, $package, $tourist) {
+
+        // 🔒 Always get latest seat info
+        $package->refresh();
+
+        // ❌ Seat availability check (MAIN FIX)
+        if ($request->total_persons > $package->available_seats) {
+            return back()
+                ->withInput()
+                ->with('error', 'Only '.$package->available_seats.' seats are available.');
         }
 
-        // ✅ Validation
-        $request->validate([
-            'phone' => 'required|regex:/^01[3-9][0-9]{8}$/',
-            'present_address' => 'required|string|min:5|max:255',
-            'city' => 'required|string|max:100',
-            'emergency_contact' => 'required|regex:/^01[3-9][0-9]{8}$/',
-            'total_persons' => 'required|integer|min:1',
-        ]);
-
-        // ✅ Amount calculation
-        $amount = $package->price_per_person;
+        // ===============================
+        // AMOUNT CALCULATION
+        // ===============================
+        $price = $package->price_per_person;
         $discount = $package->discount ?? 0;
-        $discountAmount = ($amount * $discount) / 100;
-        $perPersonAmount = $amount - $discountAmount;
+        $discountAmount = ($price * $discount) / 100;
+        $perPersonAmount = $price - $discountAmount;
 
-        $totalPersons = $request->total_persons;
+        $totalPersons = (int) $request->total_persons;
         $finalAmount = $perPersonAmount * $totalPersons;
 
-        // ✅ CREATE APPLICATION BEFORE PAYMENT
+        // ===============================
+        // CREATE APPLICATION
+        // ===============================
         $application = TourApplication::create([
             'tourist_id'        => $tourist->id,
             'tour_package_id'   => $package->id,
@@ -74,13 +90,17 @@ class TourApplicationController extends Controller
             'payment_status'    => 'Unpaid',
         ]);
 
-        $total_persons = $application->total_persons;
-        // Decrease seat
-        $application->tourPackage->available_seats -= (int) $total_persons;
-        $application->tourPackage->booked += (int) $total_persons;
-        $application->tourPackage->save();
+        // ===============================
+        // UPDATE SEATS (ATOMIC)
+        // ===============================
+        $package->decrement('available_seats', $totalPersons);
+        $package->increment('booked', $totalPersons);
 
-        // ✅ NOW CALL PAYMENT ROUTE (NO LOGIC CHANGE)
+        // ===============================
+        // REDIRECT TO PAYMENT
+        // ===============================
         return redirect()->route('tour.payment.start', $application->id);
-    }
+    });
+}
+
 }

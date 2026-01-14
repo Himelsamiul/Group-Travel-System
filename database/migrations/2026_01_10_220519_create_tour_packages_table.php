@@ -32,7 +32,7 @@ return new class extends Migration
             $table->integer('max_persons');
             $table->integer('min_persons')->nullable();
             $table->integer('available_seats');
-            $table->integer('booked');
+            $table->integer('booked')->default(0);
 
             // Pricing
             $table->decimal('price_per_person', 10, 2);

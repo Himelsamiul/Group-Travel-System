@@ -90,8 +90,8 @@ Route::group(['middleware' => 'touristAuth'], function () {
 
     Route::get('/profile', [WebAuthController::class, 'profile'])->name('web.profile');
     // Tour application
-    Route::post('/tour/{package}/apply', [TourApplicationController::class, 'apply'])->name('tour.apply');
-    Route::get('/tour/{package}/apply', [TourApplicationController::class, 'showApplyForm'])->name('tour.apply.form');
+    Route::post('/tour/apply/{package}', [TourApplicationController::class, 'apply'])->name('tour.apply');
+    Route::get('/tour/apply/{package}', [TourApplicationController::class, 'showApplyForm'])->name('tour.apply.form');
     Route::get('/tour/payment/{id}', [PaymentController::class, 'start'])->name('tour.payment.start');
     Route::get('/tour/cancel/{id}', [WebAuthController::class, 'cancel'])->name('tour.booking.cancel');
 });

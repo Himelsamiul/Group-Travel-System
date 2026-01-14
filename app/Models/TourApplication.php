@@ -13,6 +13,7 @@ class TourApplication extends Model
         'tourist_id',
         'tour_package_id',
         'phone',
+        'booked',
         'address',
         'city',
         'emergency_contact',
