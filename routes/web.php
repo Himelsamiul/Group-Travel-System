@@ -89,8 +89,6 @@ Route::group(['middleware' => 'touristAuth'], function () {
     
 
     Route::get('/profile', [WebAuthController::class, 'profile'])->name('web.profile');
-    Route::get('/my-booking/{id}',[WebAuthController::class, 'bookingDetails'])->name('tour.booking.details');
-
     // Tour application
     Route::post('/tour/apply/{package}', [TourApplicationController::class, 'apply'])->name('tour.apply');
     Route::get('/tour/apply/{package}', [TourApplicationController::class, 'showApplyForm'])->name('tour.apply.form');

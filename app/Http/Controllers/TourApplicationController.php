@@ -30,7 +30,6 @@ class TourApplicationController extends Controller
     // Submit Apply Form
     // ===============================
 
-
 public function apply(Request $request, TourPackage $package)
 {
     $tourist = auth()->guard('touristGuard')->user();
