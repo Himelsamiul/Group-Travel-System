@@ -71,13 +71,13 @@
                 </a>
             </li>
 
-            {{-- Settings --}}
-            <!-- <li class="nav-item">
-                <a href="#">
-                    <i class="la la-cog"></i>
-                    <p>Settings</p>
-                </a>
-            </li> -->
+<li class="nav-item">
+    <a href="{{ route('admin.contact.messages') }}">
+        <i class="la la-envelope"></i>
+        <p>Contact Messages</p>
+    </a>
+</li>
+
 
             {{-- Logout --}}
             <li class="nav-item">

@@ -61,12 +61,18 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/admin/tour-approvals/{id}/reject', [TourApprovalController::class, 'reject'])->name('admin.tour.approvals.reject');
             // Reports page
         Route::get('/admin/reports', [TourApprovalController::class, 'report'])->name('admin.reports');
+        Route::get('/admin/contact-messages', [WebHomeController::class, 'contactMessages'])->name('admin.contact.messages');
+        
+
     });
 });
 
 //website
 Route::get('/', [WebHomeController::class, 'home'])->name('home');
 Route::get('/about', [WebHomeController::class, 'about'])->name('about');
+Route::get('/contact-us', [WebHomeController::class, 'contact'])->name('contact');
+Route::post('/contact-us', [WebHomeController::class, 'contactSubmit'])->name('contact.submit');
+
 // Route::get('/services', [WebHomeController::class, 'services'])->name('services');
 Route::get('/registration', [WebAuthController::class, 'registration'])->name('web.registration');
 Route::post('/do-registration', [WebAuthController::class, 'doRegistration'])->name('web.do.registration');
@@ -79,7 +85,7 @@ Route::get('/login', [WebAuthController::class, 'login'])->name('web.login');
 Route::post('/do-login', [WebAuthController::class, 'doLogin'])->name('web.do.login');
 Route::group(['middleware' => 'touristAuth'], function () {
     Route::get('/logout', [WebAuthController::class, 'logout'])->name('web.logout');
-    Route::get('/contact-us', [WebHomeController::class, 'contact'])->name('contact');
+    
 
     Route::get('/profile', [WebAuthController::class, 'profile'])->name('web.profile');
     // Tour application
