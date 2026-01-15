@@ -51,13 +51,13 @@ class TourPackageController extends Controller
 
             'place_id'            => 'required|exists:places,id',
 
-            'start_date'          => 'required|date',
+            'start_date'          => 'required|date|after_or_equal:today',
             'end_date'            => 'required|date|after_or_equal:start_date',
 
             'max_persons'         => 'required|integer|min:1',
             'min_persons'         => 'nullable|integer|min:1|lte:max_persons',
 
-            'price_per_person'    => 'required|numeric|min:0',
+            'price_per_person'    => 'required|numeric|min:1',
             'discount'            => 'nullable|numeric|min:0|max:100',
 
             'hotel_id'            => 'required|exists:hotels,id',
@@ -130,13 +130,13 @@ class TourPackageController extends Controller
 
         'place_id'            => 'required|exists:places,id',
 
-        'start_date'          => 'required|date',
-        'end_date'            => 'required|date|after_or_equal:start_date',
+            'start_date'          => 'required|date|after_or_equal:today',
+            'end_date'            => 'required|date|after_or_equal:start_date',
 
         'max_persons'         => 'required|integer|min:1',
         'min_persons'         => 'nullable|integer|min:1|lte:max_persons',
 
-        'price_per_person'    => 'required|numeric|min:0',
+        'price_per_person'    => 'required|numeric|min:1',
         'discount'            => 'nullable|numeric|min:0|max:100',
 
         'hotel_id'            => 'required|exists:hotels,id',
