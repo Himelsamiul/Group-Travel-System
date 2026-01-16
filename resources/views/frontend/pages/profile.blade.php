@@ -157,6 +157,11 @@
                             @endphp
 
                             <td>
+                                    <a href="{{ route('invoice.print', $app['application_id']) }}"
+       target="_blank"
+       class="btn btn-sm btn-primary mb-1">
+         Invoice
+    </a>
                                 @if($showCancelButton)
                                 <a href="{{ route('tour.booking.cancel', $app['application_id']) }}"
                                     class="badge bg-danger text-white"

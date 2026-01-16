@@ -265,4 +265,29 @@ class WebAuthController extends Controller
 
         return back()->with('success', 'Application Request For Cancel.');
     }
+
+// Frontend: print invoice
+    public function invoicePrint($id)
+{
+    try {
+        $tourist = Auth::guard('touristGuard')->user();
+
+        $application = TourApplication::with([
+            'tourPackage.place'
+        ])
+        ->where('id', $id)
+        ->where('tourist_id', $tourist->id) // 🔐 security
+        ->firstOrFail();
+
+        return view(
+            'frontend.pages.invoice-print',
+            compact('tourist', 'application')
+        );
+
+    } catch (\Exception $e) {
+        alert()->error('Error', 'Invoice not found!');
+        return redirect()->back();
+    }
+}
+
 }

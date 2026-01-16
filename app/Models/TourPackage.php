@@ -10,7 +10,7 @@ class TourPackage extends Model
         'package_title',
         'short_description',
         'full_description',
-
+        'booked',
         'place_id',
 
         'start_date',

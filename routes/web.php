@@ -87,8 +87,9 @@ Route::post('/do-login', [WebAuthController::class, 'doLogin'])->name('web.do.lo
 Route::group(['middleware' => 'touristAuth'], function () {
     Route::get('/logout', [WebAuthController::class, 'logout'])->name('web.logout');
     
-
+        // Frontend: tourist profile
     Route::get('/profile', [WebAuthController::class, 'profile'])->name('web.profile');
+    Route::get('/invoice/{id}', [WebAuthController::class, 'invoicePrint'])->name('invoice.print');
     // Tour application
     Route::post('/tour/{package}/apply', [TourApplicationController::class, 'apply'])->name('tour.apply');
     Route::get('/tour/{package}/apply', [TourApplicationController::class, 'showApplyForm'])->name('tour.apply.form');

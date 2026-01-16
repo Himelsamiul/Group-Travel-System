@@ -96,6 +96,7 @@ class TourPackageController extends Controller
         $package->excluded_items     = $request->excluded_items;
         $package->thumbnail_image    = $imageName;
         $package->status             = $request->status;
+        $package->booked             = 0;
         $package->save();
 
         alert()->success('Success', 'Tour package created successfully!');
@@ -196,7 +197,7 @@ class TourPackageController extends Controller
     $package->included_items     = $request->included_items;
     $package->excluded_items     = $request->excluded_items;
     $package->status             = $request->status;
-
+    $package->booked             = 0;
     $package->save();
 
     alert()->success('Success', 'Tour package updated successfully!');
