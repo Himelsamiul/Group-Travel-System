@@ -49,6 +49,16 @@
                 </div>
             </div>
         </div>
+{{-- ================= CANCEL POLICY NOTICE ================= --}}
+<div class="alert alert-info d-flex align-items-start mb-3">
+    <i class="fa-solid fa-circle-info me-2 mt-1"></i>
+    <div>
+        <strong>Cancellation Policy:</strong><br>
+        If you want to cancel your booking, please click the
+        <strong>Cancel Booking</strong> button at least
+        <strong>2 days before</strong> the tour date.
+    </div>
+</div>
 
         {{-- ================= HISTORY SECTION ================= --}}
         <div class="card border-0 shadow-sm">

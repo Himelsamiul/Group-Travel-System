@@ -15,14 +15,53 @@ class TourPackageController extends Controller
     // ===============================
     // INDEX
     // ===============================
-    public function index()
-    {
-            $packages = TourPackage::withCount('tourApplications')
-                ->latest()
-                ->paginate(10);
+public function index(Request $request)
+{
+    $packages = TourPackage::with(['place','hotel'])
+        ->withCount('tourApplications')
 
-        return view('backend.pages.tour-packages.index', compact('packages'));
-    }
+        // 🔍 Title search
+        ->when($request->title, function ($q) use ($request) {
+            $q->where('package_title', 'like', '%' . $request->title . '%');
+        })
+
+        // 📍 Place filter
+        ->when($request->place_id, function ($q) use ($request) {
+            $q->where('place_id', $request->place_id);
+        })
+
+        // 🏨 Hotel filter
+        ->when($request->hotel_id, function ($q) use ($request) {
+            $q->where('hotel_id', $request->hotel_id);
+        })
+
+        // 🟢 Status filter
+        ->when($request->status, function ($q) use ($request) {
+            $q->where('status', $request->status);
+        })
+
+        // 📅 Start date
+        ->when($request->from_date, function ($q) use ($request) {
+            $q->whereDate('start_date', '>=', $request->from_date);
+        })
+
+        // 📅 End date
+        ->when($request->to_date, function ($q) use ($request) {
+            $q->whereDate('end_date', '<=', $request->to_date);
+        })
+
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
+
+    $places = Place::orderBy('name')->get();
+    $hotels = Hotel::orderBy('name')->get();
+
+    return view(
+        'backend.pages.tour-packages.index',
+        compact('packages','places','hotels')
+    );
+}
 
     // ===============================
     // CREATE

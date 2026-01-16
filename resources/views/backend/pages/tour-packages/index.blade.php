@@ -11,6 +11,88 @@
             + Create Tour Package
         </a>
     </div>
+<form method="GET" class="card mb-3">
+    <div class="card-body">
+        <div class="row g-2">
+
+            {{-- Package Title --}}
+            <div class="col-md-3">
+                <input type="text"
+                       name="title"
+                       class="form-control"
+                       placeholder="Search package title"
+                       value="{{ request('title') }}">
+            </div>
+
+            {{-- Place --}}
+            <div class="col-md-2">
+                <select name="place_id" class="form-control">
+                    <option value="">All Places</option>
+                    @foreach($places as $place)
+                        <option value="{{ $place->id }}"
+                            {{ request('place_id') == $place->id ? 'selected' : '' }}>
+                            {{ $place->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Hotel --}}
+            <div class="col-md-2">
+                <select name="hotel_id" class="form-control">
+                    <option value="">All Hotels</option>
+                    @foreach($hotels as $hotel)
+                        <option value="{{ $hotel->id }}"
+                            {{ request('hotel_id') == $hotel->id ? 'selected' : '' }}>
+                            {{ $hotel->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Status --}}
+            <div class="col-md-2">
+                <select name="status" class="form-control">
+                    <option value="">All Status</option>
+                    <option value="active" {{ request('status')=='active'?'selected':'' }}>
+                        Active
+                    </option>
+                    <option value="inactive" {{ request('status')=='inactive'?'selected':'' }}>
+                        Inactive
+                    </option>
+                </select>
+            </div>
+
+            {{-- Start Date --}}
+            <div class="col-md-2">
+                <input type="date"
+                       name="from_date"
+                       class="form-control"
+                       value="{{ request('from_date') }}">
+            </div>
+
+            {{-- End Date --}}
+            <div class="col-md-2">
+                <input type="date"
+                       name="to_date"
+                       class="form-control"
+                       value="{{ request('to_date') }}">
+            </div>
+
+            {{-- Buttons --}}
+            <div class="col-md-3 d-flex gap-2">
+                <button class="btn btn-primary w-100">
+                    🔍 Search
+                </button>
+                <a href="{{ route('tour-packages.index') }}"
+                   class="btn btn-secondary w-100">
+                    Reset
+                </a>
+            </div>
+
+        </div>
+    </div>
+</form>
 
     <div class="card shadow-sm">
         <div class="card-body table-responsive">

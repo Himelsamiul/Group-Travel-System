@@ -12,15 +12,33 @@ use App\Models\TourPackage;
 class TourApprovalController extends Controller
 {
 
-    public function index()
-    {
-        $applications = TourApplication::with(['tourist', 'tourPackage'])
-            ->latest()
-            ->get();
+public function index(Request $request)
+{
+    $applications = TourApplication::with(['tourist', 'tourPackage'])
+        ->when($request->name, function ($q) use ($request) {
+            $q->whereHas('tourist', function ($qq) use ($request) {
+                $qq->where('name', 'like', '%' . $request->name . '%');
+            });
+        })
+        ->when($request->phone, function ($q) use ($request) {
+            $q->where('phone', 'like', '%' . $request->phone . '%');
+        })
+        ->when($request->package_id, function ($q) use ($request) {
+            $q->where('tour_package_id', $request->package_id);
+        })
+        ->when($request->from_date, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from_date);
+        })
+        ->when($request->to_date, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to_date);
+        })
+        ->latest()
+        ->get();
 
-        return view('backend.pages.tour-list', compact('applications'));
-    }
+    $packages = TourPackage::orderBy('package_title')->get();
 
+    return view('backend.pages.tour-list', compact('applications', 'packages'));
+}
 
     public function approve($id)
     {

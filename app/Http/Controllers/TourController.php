@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\TourPackage;
 use App\Models\TourApplication;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TourController extends Controller
 {
@@ -15,6 +16,7 @@ class TourController extends Controller
     {
         $packages = TourPackage::where('status', 'active')
             ->where('available_seats', '>', 0)
+            ->whereDate('start_date', '>', Carbon::today()) // ✅ NEW CONDITION
             ->latest()
             ->paginate(9);
 

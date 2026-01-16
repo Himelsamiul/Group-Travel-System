@@ -11,6 +11,71 @@
             {{ session('success') }}
         </div>
     @endif
+<form method="GET" class="card mb-3">
+    <div class="card-body">
+        <div class="row g-2">
+
+            {{-- Name --}}
+            <div class="col-md-3">
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       placeholder="Search by name"
+                       value="{{ request('name') }}">
+            </div>
+
+            {{-- Phone --}}
+            <div class="col-md-3">
+                <input type="text"
+                       name="phone"
+                       class="form-control"
+                       placeholder="Search by phone"
+                       value="{{ request('phone') }}">
+            </div>
+
+            {{-- Package --}}
+            <div class="col-md-3">
+                <select name="package_id" class="form-control">
+                    <option value="">All Packages</option>
+                    @foreach($packages as $package)
+                        <option value="{{ $package->id }}"
+                            {{ request('package_id') == $package->id ? 'selected' : '' }}>
+                            {{ $package->package_title }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- From Date --}}
+            <div class="col-md-3">
+                <input type="date"
+                       name="from_date"
+                       class="form-control"
+                       value="{{ request('from_date') }}">
+            </div>
+
+            {{-- To Date --}}
+            <div class="col-md-3">
+                <input type="date"
+                       name="to_date"
+                       class="form-control"
+                       value="{{ request('to_date') }}">
+            </div>
+
+            {{-- Buttons --}}
+            <div class="col-md-3 d-flex gap-2">
+                <button class="btn btn-primary w-100">
+                    🔍 Search
+                </button>
+                <a href="{{ route('admin.tour.approvals') }}"
+                   class="btn btn-secondary w-100">
+                    Reset
+                </a>
+            </div>
+
+        </div>
+    </div>
+</form>
 
     <div class="card">
         <div class="card-body table-responsive">
@@ -129,7 +194,7 @@
                                           method="POST" style="display:inline;">
                                         @csrf
                                         <button class="btn btn-sm btn-success"
-                                            onclick="return confirm('Accept this cancellation request?')">
+                                            onclick="return confirm('Accept this payment complete?')">
                                             Complete Payment
                                         </button>
                                     </form>
@@ -139,7 +204,7 @@
                                           method="POST" style="display:inline;">
                                         @csrf
                                         <button class="btn btn-sm btn-success"
-                                            onclick="return confirm('Complete this Payment For this Booking?')">
+                                            onclick="return confirm('Are you sure you want to accept this cancel request?')">
                                             Accept Cancel Request
                                         </button>
                                     </form>
