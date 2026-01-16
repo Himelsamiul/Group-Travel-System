@@ -37,16 +37,6 @@
                    value="{{ request('phone') }}">
         </div>
 
-        <div class="col-md-2">
-            <label>Status</label>
-            <select name="status" class="form-control">
-                <option value="">All</option>
-                <option value="pending"  {{ request('status')=='pending'?'selected':'' }}>Pending</option>
-                <option value="accepted" {{ request('status')=='accepted'?'selected':'' }}>Accepted</option>
-                <option value="rejected" {{ request('status')=='rejected'?'selected':'' }}>Rejected</option>
-            </select>
-        </div>
-
 
         <div class="col-md-2">
             <label>From Date</label>
@@ -86,7 +76,7 @@
                         <th>Tourist</th>
                         <th>Phone</th>
                         <th>Package</th>
-                        <th>Status</th>
+                       
                         <th>Final Amount</th>
                         <th>Paid Amount</th>
                         <th>Due Amount</th>
@@ -100,15 +90,7 @@
                             <td>{{ $app->tourist->name ?? '-' }}</td>
                             <td>{{ $app->phone }}</td>
                             <td>{{ $app->tourPackage->package_title ?? '-' }}</td>
-                            <td>
-    @if($app->status == 'accepted')
-        <span class="badge bg-success">Accepted</span>
-    @elseif($app->status == 'rejected')
-        <span class="badge bg-danger">Rejected</span>
-    @else
-        <span class="badge bg-warning text-dark">Pending</span>
-    @endif
-</td>
+                            
 
 
                     

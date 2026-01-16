@@ -15,20 +15,22 @@ class HomeController extends Controller
     {
         return view('backend.pages.dashboard', [
 
-            // Existing cards
+            // Basic cards
             'totalPackages'  => TourPackage::count(),
             'totalHotels'    => Hotel::count(),
             'totalTransport' => Transportation::count(),
             'totalPlaces'    => Place::count(),
+            'totalTourists'  => Tourist::count(),
 
-          
-            'totalBookings'        => TourApplication::count(),
-            'totalAcceptedBooking' => TourApplication::where('status', 'accepted')->count(),
-            'totalPendingBooking'  => TourApplication::where('status', 'pending')->count(),
-            'totalRejectedBooking' => TourApplication::where('status', 'rejected')->count(),
+            // Booking counts
+            'totalBookings' => TourApplication::count(),
 
-            
-            'totalTourists'        => Tourist::count(),
+            'pendingBookings'   => TourApplication::where('status', 'pending')->count(),
+            'acceptedBookings'  => TourApplication::where('status', 'accepted')->count(),
+            'rejectedBookings'  => TourApplication::where('status', 'rejected')->count(),
+            'bookedBookings'    => TourApplication::where('status', 'booked')->count(),
+            'cancelReqBookings' => TourApplication::where('status', 'cancel requested')->count(),
+            'cancelAccBookings' => TourApplication::where('status', 'cancel request accept')->count(),
         ]);
     }
 }
